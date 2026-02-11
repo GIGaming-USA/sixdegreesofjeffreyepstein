@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Oracle of Epstein — Network Degree Calculator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap');
+:root{--bg:#08080c;--s:#0e0e14;--s2:#14141e;--s3:#1a1a28;--b:#252538;--t:#d0d0e0;--td:#606078;--tm:#404058;--a:#dc2626;--ag:rgba(220,38,38,.12);--gold:#eab308;--blue:#3b82f6;--green:#22c55e;--purple:#a855f7;--orange:#f97316;--cyan:#06b6d4;--pink:#ec4899}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--t);font-family:'IBM Plex Mono',monospace;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1000}
+.app{max-width:1200px;margin:0 auto;padding:40px 24px}
+.mh{text-align:center;margin-bottom:48px}.mh::after{content:'';display:block;width:60px;height:1px;background:var(--a);margin:24px auto 0}
+.mhk{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--td);margin-bottom:16px}
+.mht{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(32px,5vw,56px);font-weight:400;line-height:1.1;margin-bottom:8px}.mht em{color:var(--a);font-style:italic}
+.mhs{font-size:13px;color:var(--td);font-weight:300;max-width:620px;margin:0 auto;line-height:1.6}
+.sb{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:32px}
+.sc{background:var(--s);border:1px solid var(--b);border-radius:4px;padding:14px;text-align:center}
+.sn{font-family:'Instrument Serif',Georgia,serif;font-size:26px}.sl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--td);margin-top:4px}
+.oracle{background:var(--s);border:1px solid var(--b);border-radius:6px;padding:32px;margin-bottom:32px}
+.op{font-family:'Instrument Serif',Georgia,serif;font-size:20px;text-align:center;margin-bottom:24px}.op em{color:var(--a);font-style:italic}
+.ir{display:flex;gap:12px;max-width:700px;margin:0 auto}@media(max-width:600px){.ir{flex-direction:column}}
+.iw{flex:1;position:relative}
+.il{position:absolute;top:-8px;left:12px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--td);background:var(--s);padding:0 6px;z-index:2}
+.oi{width:100%;background:var(--s2);border:1px solid var(--b);border-radius:4px;padding:14px 16px;color:var(--t);font-family:'IBM Plex Mono',monospace;font-size:14px;outline:none;transition:border-color .2s}.oi:focus{border-color:var(--a)}.oi::placeholder{color:var(--tm)}
+.ob{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:14px 28px;border:1px solid var(--a);background:var(--ag);color:var(--a);border-radius:4px;cursor:pointer;transition:all .2s;white-space:nowrap}.ob:hover{background:var(--a);color:#fff}
+.ac{position:absolute;top:100%;left:0;right:0;background:var(--s2);border:1px solid var(--b);border-top:none;border-radius:0 0 4px 4px;max-height:200px;overflow-y:auto;z-index:100;display:none}.ac.on{display:block}
+.ai{padding:10px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .1s;font-size:13px}.ai:hover{background:var(--s3)}
+.result{display:none;margin-bottom:32px}.result.on{display:block}
+.rc{background:var(--s);border:1px solid var(--b);border-radius:6px;overflow:hidden}
+.rh{padding:32px;text-align:center;border-bottom:1px solid var(--b);background:linear-gradient(135deg,var(--s2),var(--s))}
+.rn{font-family:'Instrument Serif',Georgia,serif;font-size:72px;font-weight:400;line-height:1;margin-bottom:4px}
+.rn.c0{color:var(--a)}.rn.c1{color:var(--orange)}.rn.c2{color:var(--gold)}.rn.c3{color:var(--green)}.rn.c4{color:var(--blue)}.rn.ci{color:var(--td)}
+.rs{font-size:14px;color:var(--td)}.rs strong{color:var(--t)}
+.rp{padding:32px}
+.cn{display:flex;align-items:center;gap:16px;padding:10px 0}
+.cd{width:12px;height:12px;border-radius:50%;flex-shrink:0;position:relative}
+.cd.s0{background:var(--a);box-shadow:0 0 10px var(--a)}.cd.s2{background:var(--blue)}
+.cd::after{content:'';position:absolute;width:2px;height:28px;background:var(--b);left:5px;top:14px}.cn:last-child .cd::after{display:none}
+.cm{font-size:15px;font-weight:500}.cx{font-size:11px;color:var(--td);margin-top:2px}
+.ce{padding:2px 0 2px 28px}.cl{font-size:11px;color:var(--td);font-style:italic;padding:4px 10px;background:var(--s2);border-radius:3px;border-left:2px solid var(--td);display:inline-block}
+.cl[data-t="flight"]{border-color:var(--green)}.cl[data-t="social"]{border-color:var(--purple)}.cl[data-t="business"]{border-color:var(--cyan)}.cl[data-t="legal"]{border-color:var(--orange)}.cl[data-t="financial"]{border-color:var(--gold)}.cl[data-t="family"]{border-color:var(--pink)}.cl[data-t="political"]{border-color:var(--blue)}.cl[data-t="email"]{border-color:var(--td)}.cl[data-t="photo"]{border-color:var(--purple)}
+.np{text-align:center;padding:32px;color:var(--td)}
+.badges{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:24px 0}
+.badge{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border:1px solid var(--b);border-radius:2px;color:var(--td)}
+.tabs{display:flex;border-bottom:1px solid var(--b)}.tab{padding:12px 24px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--td);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}.tab:hover{color:var(--t)}.tab.on{color:var(--a);border-bottom-color:var(--a)}
+.tc{display:none}.tc.on{display:block}
+.bg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:5px;padding:12px 0;max-height:500px;overflow-y:auto}
+.bi{padding:7px 10px;background:var(--s);border:1px solid var(--b);border-radius:3px;cursor:pointer;transition:all .15s;display:flex;justify-content:space-between;align-items:center;font-size:11px}.bi:hover{border-color:var(--a);background:var(--s2)}
+.bf{padding:10px 0;display:flex;gap:5px;flex-wrap:wrap}
+.fb{font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:5px 10px;border:1px solid var(--b);border-radius:3px;background:transparent;color:var(--td);cursor:pointer;font-family:'IBM Plex Mono',monospace}.fb.on{border-color:var(--a);color:var(--a);background:var(--ag)}
+.foot{text-align:center;padding:32px 0;border-top:1px solid var(--b);margin-top:48px}.foot p{font-size:11px;color:var(--tm);line-height:1.8;max-width:620px;margin:0 auto}.foot p+p{margin-top:8px}
+canvas{width:100%;height:500px;background:var(--s);border:1px solid var(--b);border-radius:6px;cursor:grab}canvas:active{cursor:grabbing}
+.dch{display:flex;align-items:flex-end;gap:4px;height:100px;padding:0 20px}
+.dbw{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%}
+.dbc{font-size:10px;color:var(--t)}.dbl{font-size:10px;color:var(--td)}
+#tip{position:fixed;background:var(--s2);border:1px solid var(--b);padding:6px 10px;border-radius:3px;font-size:11px;color:var(--t);pointer-events:none;z-index:200;display:none;font-family:'IBM Plex Mono',monospace;max-width:280px}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="mh"><div class="mhk">Network Analysis Research Tool</div><h1 class="mht">The Oracle of <em>Epstein</em></h1><p class="mhs">Type any name to calculate their Epstein Number — the degrees of separation from Jeffrey Epstein through documented connections. Works just like the Oracle of Bacon.</p></header>
+<div class="sb" id="stats"></div>
+<div class="oracle">
+<div class="op">How connected is <em>_______</em> to Jeffrey Epstein?</div>
+<div class="ir"><div class="iw"><span class="il">Person</span><input class="oi" id="inp" placeholder="Try: Taylor Swift, Barack Obama, Tim Cook..." autocomplete="off"><div class="ac" id="ac"></div></div><button class="ob" id="go">Calculate</button></div>
+</div>
+<div class="result" id="res"></div>
+<div id="dsc"></div>
+<div class="badges"><span class="badge">Flight Logs 1997–2006</span><span class="badge">Black Book</span><span class="badge">Giuffre v. Maxwell</span><span class="badge">DOJ Dec 2025</span><span class="badge">Epstein Files Act</span><span class="badge">Investigative Reporting</span></div>
+<div><div class="tabs"><div class="tab on" data-t="graph">Graph</div><div class="tab" data-t="browse">Browse (<span id="ttl">0</span>)</div></div>
+<div class="tc on" id="tab-graph"><canvas id="cv"></canvas></div>
+<div class="tc" id="tab-browse"><div class="bf" id="bfilt"></div><div class="bg" id="bgrid"></div></div></div>
+<footer class="foot"><p>Visualizes publicly documented connections for academic research. Presence does not imply wrongdoing. Being in a contact book, photo, or flight log is not evidence of criminal conduct.</p><p>Sources: DOJ, Giuffre v. Maxwell, FAA, Epstein contact books, Miami Herald, NYT, WSJ, NBC.</p></footer>
+</div><div id="tip"></div>
+<script>
+const N={
+// === EPSTEIN CORE ===
+"epstein":{n:"Jeffrey Epstein",d:"Financier, convicted sex trafficker",c:"inner-circle"},
+"maxwell":{n:"Ghislaine Maxwell",d:"Convicted sex trafficker",c:"inner-circle"},
+"brunel":{n:"Jean-Luc Brunel",d:"Model scout, died in custody",c:"inner-circle"},
+"kellen":{n:"Sarah Kellen",d:"Assistant, 520+ flights",c:"inner-circle"},
+"marcinkova":{n:"Nadia Marcinkova",d:"350+ flights",c:"inner-circle"},
+"groff":{n:"Lesley Groff",d:"Executive assistant",c:"inner-circle"},
+"ross-a":{n:"Adriana Ross",d:"Named co-conspirator",c:"inner-circle"},
+"mark-e":{n:"Mark Epstein",d:"Brother",c:"family"},
+"r-maxwell":{n:"Robert Maxwell",d:"Ghislaine's father",c:"family"},
+// === LEGAL ===
+"dershowitz":{n:"Alan Dershowitz",d:"Defense attorney",c:"legal"},
+"acosta":{n:"Alexander Acosta",d:"2008 plea deal",c:"legal"},
+"starr":{n:"Ken Starr",d:"Defense team",c:"legal"},
+"indyke":{n:"Darren Indyke",d:"Estate executor",c:"legal"},
+"giuffre":{n:"Virginia Giuffre",d:"Survivor, accuser",c:"legal"},
+"sjoberg":{n:"Johanna Sjoberg",d:"Survivor",c:"legal"},
+"boies":{n:"David Boies",d:"Attorney for Giuffre",c:"legal"},
+// === US POLITICS ===
+"clinton":{n:"Bill Clinton",d:"Former President, flights",c:"politics"},
+"trump":{n:"Donald Trump",d:"Former President",c:"politics"},
+"gore":{n:"Al Gore",d:"Former VP",c:"politics"},
+"richardson":{n:"Bill Richardson",d:"Late NM Governor",c:"politics"},
+"mitchell":{n:"George Mitchell",d:"Former Senate Leader",c:"politics"},
+"bannon":{n:"Steve Bannon",d:"Former WH advisor",c:"politics"},
+"kennedy-t":{n:"Ted Kennedy",d:"Late US Senator",c:"politics"},
+"kerry":{n:"John Kerry",d:"Former Sec of State",c:"politics"},
+"summers":{n:"Larry Summers",d:"Former Treasury Sec",c:"politics"},
+"cuomo":{n:"Andrew Cuomo",d:"Former NY Governor",c:"politics"},
+"ivanka":{n:"Ivanka Trump",d:"Former WH advisor",c:"politics"},
+"hillary":{n:"Hillary Clinton",d:"Former Sec of State",c:"politics"},
+"obama":{n:"Barack Obama",d:"Former President",c:"politics"},
+"pelosi":{n:"Nancy Pelosi",d:"Former Speaker",c:"politics"},
+"schumer":{n:"Chuck Schumer",d:"Senate Leader",c:"politics"},
+"pence":{n:"Mike Pence",d:"Former VP",c:"politics"},
+"desantis":{n:"Ron DeSantis",d:"Florida Governor",c:"politics"},
+"rfk":{n:"Robert F. Kennedy Jr.",d:"HHS Secretary",c:"politics"},
+"kushner":{n:"Jared Kushner",d:"Former WH advisor",c:"politics"},
+"bondi":{n:"Pam Bondi",d:"Attorney General",c:"politics"},
+"barr":{n:"Bill Barr",d:"Former AG",c:"politics"},
+"romney":{n:"Mitt Romney",d:"Senator",c:"politics"},
+"biden":{n:"Joe Biden",d:"Former President",c:"politics"},
+"harris":{n:"Kamala Harris",d:"Vice President",c:"politics"},
+"newsom":{n:"Gavin Newsom",d:"CA Governor",c:"politics"},
+"aoc":{n:"Alexandria Ocasio-Cortez",d:"Congresswoman",c:"politics"},
+"sanders":{n:"Bernie Sanders",d:"Senator",c:"politics"},
+// === UK/ROYALTY ===
+"andrew":{n:"Prince Andrew",d:"Settled civil case",c:"royalty"},
+"ferguson":{n:"Sarah Ferguson",d:"Duchess of York",c:"royalty"},
+"mandelson":{n:"Peter Mandelson",d:"Dismissed as UK ambassador",c:"politics"},
+"blair":{n:"Tony Blair",d:"Former UK PM",c:"politics"},
+"mette":{n:"Crown Princess Mette-Marit",d:"Norway",c:"royalty"},
+"charles":{n:"King Charles III",d:"British monarch",c:"royalty"},
+"william":{n:"Prince William",d:"Prince of Wales",c:"royalty"},
+"harry":{n:"Prince Harry",d:"Duke of Sussex",c:"royalty"},
+"cameron":{n:"David Cameron",d:"Former UK PM",c:"politics"},
+"starmer":{n:"Keir Starmer",d:"UK PM",c:"politics"},
+"sofia-sw":{n:"Princess Sofia of Sweden",d:"Met Epstein 2005",c:"royalty"},
+"gordon-brown":{n:"Gordon Brown",d:"Former UK PM, pseudonym in files",c:"politics"},
+// === INTERNATIONAL ===
+"barak":{n:"Ehud Barak",d:"Former Israeli PM, 30+ meetings",c:"politics"},
+"aznar":{n:"José María Aznar",d:"Former Spanish PM",c:"politics"},
+"lajcak":{n:"Miroslav Lajčák",d:"Resigned over ties",c:"politics"},
+"mbs":{n:"Mohammed bin Salman",d:"Saudi Crown Prince",c:"politics"},
+"netanyahu":{n:"Benjamin Netanyahu",d:"Israeli PM",c:"politics"},
+"macron":{n:"Emmanuel Macron",d:"French President",c:"politics"},
+"trudeau":{n:"Justin Trudeau",d:"Canadian PM",c:"politics"},
+"putin":{n:"Vladimir Putin",d:"Russian President, Epstein sought meetings",c:"politics"},
+"merkel":{n:"Angela Merkel",d:"Former German Chancellor",c:"politics"},
+"rod-larsen":{n:"Terje Rød-Larsen",d:"Norwegian diplomat, 'best friend'",c:"politics"},
+"brende":{n:"Børge Brende",d:"WEF CEO, in files",c:"politics"},
+"dalai":{n:"14th Dalai Lama",d:"Spiritual leader",c:"politics"},
+"jack-lang":{n:"Jack Lang",d:"Former French culture minister",c:"politics"},
+// === TECH ===
+"gates":{n:"Bill Gates",d:"Microsoft founder",c:"business"},
+"musk":{n:"Elon Musk",d:"Tesla/SpaceX CEO",c:"business"},
+"hoffman":{n:"Reid Hoffman",d:"LinkedIn co-founder",c:"business"},
+"brin":{n:"Sergey Brin",d:"Google co-founder",c:"business"},
+"page":{n:"Larry Page",d:"Google co-founder",c:"business"},
+"zuckerberg":{n:"Mark Zuckerberg",d:"Meta CEO",c:"business"},
+"thiel":{n:"Peter Thiel",d:"PayPal co-founder",c:"business"},
+"bezos":{n:"Jeff Bezos",d:"Amazon founder",c:"business"},
+"kotick":{n:"Bobby Kotick",d:"Former Activision CEO",c:"business"},
+"branson":{n:"Richard Branson",d:"Virgin founder",c:"business"},
+"cook":{n:"Tim Cook",d:"Apple CEO",c:"business"},
+"nadella":{n:"Satya Nadella",d:"Microsoft CEO",c:"business"},
+"pichai":{n:"Sundar Pichai",d:"Google CEO",c:"business"},
+"dorsey":{n:"Jack Dorsey",d:"Twitter co-founder",c:"business"},
+"sandberg":{n:"Sheryl Sandberg",d:"Former Meta COO",c:"business"},
+"schmidt":{n:"Eric Schmidt",d:"Former Google CEO",c:"business"},
+"altman":{n:"Sam Altman",d:"OpenAI CEO",c:"business"},
+"jobs":{n:"Steve Jobs",d:"Late Apple co-founder",c:"business"},
+"woz":{n:"Steve Wozniak",d:"Apple co-founder",c:"business"},
+"wojcicki":{n:"Anne Wojcicki",d:"23andMe, Brin's ex",c:"business"},
+"kalanick":{n:"Travis Kalanick",d:"Uber co-founder",c:"business"},
+"hastings":{n:"Reed Hastings",d:"Netflix co-founder",c:"business"},
+// === FINANCE ===
+"wexner":{n:"Les Wexner",d:"L Brands, power of attorney",c:"finance"},
+"black-l":{n:"Leon Black",d:"Apollo, $170M fees",c:"finance"},
+"staley":{n:"Jes Staley",d:"Former Barclays CEO",c:"finance"},
+"dubin-g":{n:"Glenn Dubin",d:"Hedge fund manager",c:"finance"},
+"dubin-e":{n:"Eva Andersson-Dubin",d:"Ex-girlfriend 11 yrs",c:"finance"},
+"zuckerman":{n:"Mort Zuckerman",d:"Media/RE mogul",c:"finance"},
+"burkle":{n:"Ron Burkle",d:"Supermarket mogul",c:"finance"},
+"perelman":{n:"Ronald Perelman",d:"Revlon",c:"finance"},
+"barrack":{n:"Tom Barrack",d:"Colony Capital",c:"finance"},
+"tisch":{n:"Steven Tisch",d:"NY Giants co-owner",c:"finance"},
+"koch":{n:"David Koch",d:"Late businessman",c:"finance"},
+"rothschild":{n:"Ariane de Rothschild",d:"Banker",c:"finance"},
+"dimon":{n:"Jamie Dimon",d:"JPMorgan CEO",c:"finance"},
+"buffett":{n:"Warren Buffett",d:"Berkshire Hathaway",c:"finance"},
+"soros":{n:"George Soros",d:"Investor",c:"finance"},
+"dalio":{n:"Ray Dalio",d:"Bridgewater",c:"finance"},
+"blankfein":{n:"Lloyd Blankfein",d:"Former Goldman CEO",c:"finance"},
+"ackman":{n:"Bill Ackman",d:"Pershing Square",c:"finance"},
+"icahn":{n:"Carl Icahn",d:"Activist investor",c:"finance"},
+"marc-rowan":{n:"Marc Rowan",d:"Apollo CEO",c:"finance"},
+"jpmorgan":{n:"JPMorgan Chase",d:"Banking 1998-2013",c:"institution"},
+"deutschebank":{n:"Deutsche Bank",d:"Banking 2013-19",c:"institution"},
+"lutnick":{n:"Howard Lutnick",d:"Commerce Sec, Cantor Fitzgerald",c:"finance"},
+// === ENTERTAINMENT - ACTORS ===
+"spacey":{n:"Kevin Spacey",d:"Actor, flight logs",c:"entertainment"},
+"allen":{n:"Woody Allen",d:"Filmmaker, regular at dinners",c:"entertainment"},
+"copperfield":{n:"David Copperfield",d:"Magician, court docs",c:"entertainment"},
+"campbell":{n:"Naomi Campbell",d:"Model, contact book",c:"entertainment"},
+"tucker":{n:"Chris Tucker",d:"Comedian, flight logs",c:"entertainment"},
+"jackson":{n:"Michael Jackson",d:"Late singer, photographed",c:"entertainment"},
+"jagger":{n:"Mick Jagger",d:"Rolling Stones, photos",c:"entertainment"},
+"diana-ross":{n:"Diana Ross",d:"Singer, photographed",c:"entertainment"},
+"dicaprio":{n:"Leonardo DiCaprio",d:"Actor, depositions",c:"entertainment"},
+"blanchett":{n:"Cate Blanchett",d:"Actress, records",c:"entertainment"},
+"willis":{n:"Bruce Willis",d:"Actor, records",c:"entertainment"},
+"diaz":{n:"Cameron Diaz",d:"Actress, records",c:"entertainment"},
+"cosby":{n:"Bill Cosby",d:"Black book",c:"entertainment"},
+"baldwin":{n:"Alec Baldwin",d:"Black book",c:"entertainment"},
+"weinstein":{n:"Harvey Weinstein",d:"Disgraced producer",c:"entertainment"},
+"dickinson":{n:"Janice Dickinson",d:"Supermodel, contact book",c:"entertainment"},
+"pitt":{n:"Brad Pitt",d:"Actor",c:"entertainment"},
+"clooney":{n:"George Clooney",d:"Actor/activist",c:"entertainment"},
+"oprah":{n:"Oprah Winfrey",d:"Media mogul",c:"entertainment"},
+"hanks":{n:"Tom Hanks",d:"Actor",c:"entertainment"},
+"depp":{n:"Johnny Depp",d:"Actor",c:"entertainment"},
+"streep":{n:"Meryl Streep",d:"Actress",c:"entertainment"},
+"spielberg":{n:"Steven Spielberg",d:"Filmmaker",c:"entertainment"},
+"scorsese":{n:"Martin Scorsese",d:"Filmmaker",c:"entertainment"},
+"deniro":{n:"Robert De Niro",d:"Actor",c:"entertainment"},
+"cruise":{n:"Tom Cruise",d:"Actor",c:"entertainment"},
+"aniston":{n:"Jennifer Aniston",d:"Actress",c:"entertainment"},
+"jolie":{n:"Angelina Jolie",d:"Actress/activist",c:"entertainment"},
+"damon":{n:"Matt Damon",d:"Actor",c:"entertainment"},
+"affleck":{n:"Ben Affleck",d:"Actor/director",c:"entertainment"},
+"freeman":{n:"Morgan Freeman",d:"Actor",c:"entertainment"},
+"nicholson":{n:"Jack Nicholson",d:"Actor",c:"entertainment"},
+"pacino":{n:"Al Pacino",d:"Actor",c:"entertainment"},
+"washington":{n:"Denzel Washington",d:"Actor",c:"entertainment"},
+"portman":{n:"Natalie Portman",d:"Actress",c:"entertainment"},
+"lawrence":{n:"Jennifer Lawrence",d:"Actress",c:"entertainment"},
+"stone-e":{n:"Emma Stone",d:"Actress",c:"entertainment"},
+"robbie":{n:"Margot Robbie",d:"Actress",c:"entertainment"},
+"ratner":{n:"Brett Ratner",d:"Director, photographed w/ Epstein",c:"entertainment"},
+"siegal":{n:"Peggy Siegal",d:"Publicist, extensive emails",c:"entertainment"},
+"stewart":{n:"Martha Stewart",d:"Groff shared Epstein's number",c:"entertainment"},
+"previn":{n:"Soon-Yi Previn",d:"Allen's wife, regular at dinners",c:"entertainment"},
+"nair":{n:"Mira Nair",d:"Director, in Siegal email",c:"entertainment"},
+"rose":{n:"Charlie Rose",d:"Former TV host, Epstein recommended assistants",c:"media"},
+"lauer":{n:"Matt Lauer",d:"Former Today host, discussed in emails",c:"media"},
+// === ENTERTAINMENT - MUSIC ===
+"beyonce":{n:"Beyoncé",d:"Singer",c:"entertainment"},
+"jayz":{n:"Jay-Z",d:"Rapper/businessman",c:"entertainment"},
+"swift":{n:"Taylor Swift",d:"Singer",c:"entertainment"},
+"rihanna":{n:"Rihanna",d:"Singer",c:"entertainment"},
+"drake":{n:"Drake",d:"Rapper",c:"entertainment"},
+"bieber":{n:"Justin Bieber",d:"Singer",c:"entertainment"},
+"kanye":{n:"Kanye West",d:"Rapper/designer",c:"entertainment"},
+"adele":{n:"Adele",d:"Singer",c:"entertainment"},
+"gaga":{n:"Lady Gaga",d:"Singer/actress",c:"entertainment"},
+"madonna":{n:"Madonna",d:"Singer",c:"entertainment"},
+"bono":{n:"Bono",d:"U2 frontman",c:"entertainment"},
+"keithrichards":{n:"Keith Richards",d:"Rolling Stones",c:"entertainment"},
+"eltonjohn":{n:"Elton John",d:"Singer",c:"entertainment"},
+"springsteen":{n:"Bruce Springsteen",d:"Singer",c:"entertainment"},
+"pushat":{n:"Pusha T",d:"Rapper, FBI intake form",c:"entertainment"},
+// === ENTERTAINMENT - TV/COMEDY ===
+"kimmel":{n:"Jimmy Kimmel",d:"Talk show host",c:"entertainment"},
+"fallon":{n:"Jimmy Fallon",d:"Talk show host",c:"entertainment"},
+"colbert":{n:"Stephen Colbert",d:"Talk show host",c:"entertainment"},
+"chappelle":{n:"Dave Chappelle",d:"Comedian",c:"entertainment"},
+"rock":{n:"Chris Rock",d:"Comedian",c:"entertainment"},
+"hart":{n:"Kevin Hart",d:"Comedian/actor",c:"entertainment"},
+"kardashian":{n:"Kim Kardashian",d:"Media personality",c:"entertainment"},
+"jenner-ky":{n:"Kylie Jenner",d:"Businesswoman",c:"entertainment"},
+// === FASHION/MEDIA ===
+"wintour":{n:"Anna Wintour",d:"Vogue editor",c:"media"},
+"murdoch":{n:"Rupert Murdoch",d:"Media mogul, black book",c:"media"},
+"bloomberg":{n:"Michael Bloomberg",d:"Media mogul, black book",c:"media"},
+"wiesel":{n:"Elie Wiesel",d:"Late Nobel laureate",c:"media"},
+"stephanopoulos":{n:"George Stephanopoulos",d:"ABC anchor, 2010 dinner",c:"media"},
+"brooks":{n:"David Brooks",d:"NYT, photo w/ Brin at Epstein event",c:"media"},
+"couric":{n:"Katie Couric",d:"Journalist, 2010 dinner",c:"media"},
+"cooper":{n:"Anderson Cooper",d:"CNN anchor",c:"media"},
+"hannity":{n:"Sean Hannity",d:"Fox News host",c:"media"},
+"carlson":{n:"Tucker Carlson",d:"Former Fox host",c:"media"},
+"rogan":{n:"Joe Rogan",d:"Podcast host",c:"media"},
+"lemon":{n:"Don Lemon",d:"TV journalist",c:"media"},
+"wolff":{n:"Michael Wolff",d:"Journalist, advised Epstein",c:"media"},
+// === SCIENCE ===
+"hawking":{n:"Stephen Hawking",d:"Late physicist, island conference",c:"science"},
+"minsky":{n:"Marvin Minsky",d:"Late MIT professor",c:"science"},
+"krauss":{n:"Lawrence Krauss",d:"Physicist",c:"science"},
+"nowak":{n:"Martin Nowak",d:"Harvard prof, $5M beneficiary",c:"science"},
+"chomsky":{n:"Noam Chomsky",d:"MIT linguist, photographed on plane",c:"science"},
+"ariely":{n:"Dan Ariely",d:"Duke professor",c:"science"},
+"attia":{n:"Peter Attia",d:"Doctor, 1700+ appearances",c:"science"},
+"degrasse":{n:"Neil deGrasse Tyson",d:"Astrophysicist",c:"science"},
+"pinker":{n:"Steven Pinker",d:"Harvard psychologist",c:"science"},
+"brockman":{n:"John Brockman",d:"Literary agent, organized Epstein salons",c:"science"},
+"trivers":{n:"Robert Trivers",d:"Biologist, received $40K from Epstein",c:"science"},
+// === INSTITUTIONS ===
+"mit":{n:"MIT Media Lab",d:"Epstein donations",c:"institution"},
+"harvard":{n:"Harvard University",d:"$9M+ donations",c:"institution"},
+"oz":{n:"Mehmet Oz",d:"CMS Admin, Epstein paid travel 2004",c:"politics"},
+"doja":{n:"Doja Cat",d:"Singer",c:"entertainment"},
+// === SPORTS ===
+"lebron":{n:"LeBron James",d:"NBA player",c:"entertainment"},
+"jordan":{n:"Michael Jordan",d:"NBA legend/businessman",c:"entertainment"},
+"serena":{n:"Serena Williams",d:"Tennis champion",c:"entertainment"},
+"brady":{n:"Tom Brady",d:"NFL legend",c:"entertainment"},
+"beckham":{n:"David Beckham",d:"Soccer star/businessman",c:"entertainment"},
+"ronaldo":{n:"Cristiano Ronaldo",d:"Soccer star",c:"entertainment"},
+};
+
+const E=[
+// ===============================
+// EPSTEIN DIRECT CONNECTIONS (EN=1)
+// ===============================
+["epstein","maxwell","social","Partner and procurer for decades"],
+["epstein","brunel","business","Model scouting network"],
+["epstein","kellen","business","Personal assistant, 520+ flights"],
+["epstein","marcinkova","social","350+ flights"],
+["epstein","groff","business","Executive assistant"],
+["epstein","ross-a","business","Named co-conspirator"],
+["epstein","mark-e","family","Brother"],
+["epstein","indyke","legal","Estate executor"],
+["epstein","dershowitz","legal","Defense attorney"],
+["epstein","acosta","legal","2008 plea deal"],
+["epstein","starr","legal","Defense team"],
+["epstein","giuffre","legal","Key accuser"],
+["epstein","sjoberg","legal","Gave depositions"],
+["epstein","clinton","flight","11+ flights"],
+["epstein","trump","social","Social acquaintance, Mar-a-Lago"],
+["epstein","gore","social","Named in documents"],
+["epstein","richardson","social","Named in allegations"],
+["epstein","mitchell","social","Named in allegations"],
+["epstein","bannon","email","Messages 2018-19"],
+["epstein","kennedy-t","social","Contact book"],
+["epstein","kerry","social","Black book"],
+["epstein","summers","flight","Flew on jet"],
+["epstein","cuomo","social","Black book"],
+["epstein","ivanka","social","Black book"],
+["epstein","andrew","social","Social, Buckingham invite"],
+["epstein","mandelson","email","Emails, UK govt info"],
+["epstein","blair","social","Contact book"],
+["epstein","mette","social","Met 2011-13, 1000+ mentions"],
+["epstein","ferguson","financial","£15K loan"],
+["epstein","gordon-brown","email","Pseudonym revealed in files"],
+["epstein","barak","business","30+ meetings, Carbyne"],
+["epstein","aznar","social","Parcels 2003-04"],
+["epstein","lajcak","social","Photographed"],
+["epstein","mbs","social","Black book"],
+["epstein","putin","email","Sought meetings via Jagland"],
+["epstein","rod-larsen","social","Called Epstein 'best friend'"],
+["epstein","brende","social","In files"],
+["epstein","dalai","social","Socialized with"],
+["epstein","jack-lang","social","In files"],
+["epstein","gates","business","Met post-conviction"],
+["epstein","musk","email","Emails 2012-13, 140+ refs"],
+["epstein","hoffman","social","Visited island"],
+["epstein","brin","email","Emailed Maxwell re: dinner"],
+["epstein","page","email","Helicopter connection"],
+["epstein","zuckerberg","social","Attended dinner"],
+["epstein","thiel","business","1000s of references"],
+["epstein","bezos","social","Same events"],
+["epstein","kotick","email","Invited to events"],
+["epstein","branson","email","Emails, photographed"],
+["epstein","wexner","financial","Power of attorney"],
+["epstein","black-l","financial","$170M fees"],
+["epstein","staley","email","1200+ emails"],
+["epstein","dubin-g","financial","Named in docs"],
+["epstein","dubin-e","social","Ex-girlfriend 11 yrs"],
+["epstein","zuckerman","social","NYC circle"],
+["epstein","burkle","social","Black book"],
+["epstein","perelman","social","Social"],
+["epstein","barrack","social","Longtime friend"],
+["epstein","tisch","email","Emails re: women"],
+["epstein","koch","social","Black book"],
+["epstein","rothschild","business","Barak emails"],
+["epstein","marc-rowan","email","Tax emails despite denial"],
+["epstein","lutnick","social","Mentioned in files"],
+["epstein","spacey","flight","Flight logs, Africa trip"],
+["epstein","allen","social","Regular at dinners post-2010"],
+["epstein","copperfield","social","Court documents"],
+["epstein","campbell","social","Contact book"],
+["epstein","tucker","flight","Flight logs"],
+["epstein","jackson","photo","Photographed"],
+["epstein","jagger","photo","DOJ photos"],
+["epstein","diana-ross","photo","Photographed at events"],
+["epstein","dicaprio","social","Depositions"],
+["epstein","blanchett","social","Records"],
+["epstein","willis","social","Records"],
+["epstein","diaz","social","Records"],
+["epstein","cosby","social","Black book, neighbor"],
+["epstein","baldwin","social","Black book"],
+["epstein","dickinson","social","Contact book"],
+["epstein","weinstein","social","Shared circles, investors"],
+["epstein","ratner","photo","Photographed with Brunel"],
+["epstein","siegal","email","Extensive emails, publicist"],
+["epstein","stewart","social","Groff shared his number"],
+["epstein","previn","social","Regular at dinners with Allen"],
+["epstein","rose","social","Recommended assistants"],
+["epstein","lauer","email","Discussed in MeToo emails"],
+["epstein","wolff","social","Advised on press ~2001"],
+["epstein","nair","email","Mentioned in Siegal email"],
+["epstein","couric","social","2010 dinner"],
+["epstein","stephanopoulos","social","2010 dinner"],
+["epstein","brooks","photo","Photographed at event"],
+["epstein","murdoch","social","Black book"],
+["epstein","bloomberg","social","Black book"],
+["epstein","wiesel","social","Contact book"],
+["epstein","hawking","social","Island conference"],
+["epstein","minsky","social","Named in allegations"],
+["epstein","krauss","email","Sought advice"],
+["epstein","nowak","financial","$5M beneficiary"],
+["epstein","chomsky","social","Met multiple times, on plane"],
+["epstein","ariely","email","Requested contact info"],
+["epstein","attia","email","1700+ appearances"],
+["epstein","brockman","business","Organized salons"],
+["epstein","trivers","financial","$40K research funding"],
+["epstein","jpmorgan","financial","Banking 1998-2013"],
+["epstein","deutschebank","financial","Banking 2013-19"],
+["epstein","mit","financial","Donations"],
+["epstein","harvard","financial","$9M+"],
+["epstein","sofia-sw","social","Met 2005, invited to island"],
+["epstein","oz","financial","Paid travel 2004, email 2016"],
+
+// Inner circle cross
+["maxwell","andrew","social","Close friendship"],
+["maxwell","r-maxwell","family","Father-daughter"],
+["maxwell","clinton","social","Photographed extensively"],
+["maxwell","brunel","business","Modeling connections"],
+["maxwell","kellen","business","Worked together"],
+["maxwell","campbell","social","Fashion"],
+["maxwell","tucker","photo","Photographed"],
+["maxwell","spacey","photo","Photographed"],
+["maxwell","ferguson","social","British circles"],
+["maxwell","tisch","email","Flirty emails"],
+["maxwell","brin","email","Dinner email 2003"],
+["maxwell","giuffre","legal","Defamation suit"],
+["maxwell","wasserman","email","Offered massage"],
+["maxwell","siegal","social","NYC social circles"],
+["giuffre","sjoberg","legal","Both testified"],
+["giuffre","brunel","legal","Accused of trafficking"],
+["giuffre","copperfield","legal","Named in depositions"],
+["giuffre","richardson","legal","Named in allegations"],
+["giuffre","mitchell","legal","Named in allegations"],
+["giuffre","minsky","legal","Alleged directed to have sex"],
+["giuffre","boies","legal","Attorney-client"],
+["giuffre","andrew","legal","Civil suit, settled"],
+["dershowitz","starr","legal","Defense team"],
+
+// ===================================
+// MASSIVE CROSS-CONNECTION WEB
+// This is what makes 2nd/3rd/4th degree work
+// ===================================
+
+// === CLINTON POLITICAL WEB ===
+["clinton","hillary","family","Married"],
+["clinton","gore","political","President-VP"],
+["clinton","obama","political","Democratic presidents"],
+["clinton","pelosi","political","Democratic leadership"],
+["clinton","schumer","political","Democratic leadership"],
+["clinton","biden","political","Democratic politics"],
+["clinton","kerry","political","Democratic politics"],
+["clinton","kennedy-t","political","Democratic Senate"],
+["clinton","mitchell","political","Democratic leadership"],
+["clinton","burkle","business","Business ties"],
+["clinton","spielberg","social","Hollywood fundraisers"],
+["clinton","weinstein","social","Democratic fundraising"],
+["clinton","oprah","social","Interviews, campaigns"],
+["clinton","spacey","flight","Africa trip on jet"],
+["clinton","tucker","flight","Africa trip"],
+["clinton","diana-ross","photo","Photographed in files"],
+["clinton","jackson","photo","Photographed in files"],
+["clinton","ross-a","flight","Flight logs together"],
+["clinton","band","political","Chief aide"],
+
+// === TRUMP POLITICAL WEB ===
+["trump","ivanka","family","Father-daughter"],
+["trump","kushner","family","Son-in-law"],
+["trump","pence","political","President-VP"],
+["trump","bannon","political","Chief strategist"],
+["trump","acosta","political","Appointed Labor Sec"],
+["trump","desantis","political","Florida politics"],
+["trump","rfk","political","Cabinet appointment"],
+["trump","bondi","political","Appointed AG"],
+["trump","barr","political","Appointed AG"],
+["trump","hannity","social","Close media ally"],
+["trump","carlson","social","Media ally"],
+["trump","murdoch","social","Media relationship"],
+["trump","kimmel","social","Public feud"],
+["trump","musk","political","DOGE ally"],
+["trump","kardashian","social","Criminal justice reform meeting"],
+["trump","romney","political","Republican politics"],
+["trump","lutnick","political","Commerce Secretary"],
+["trump","oz","political","Endorsed Senate run"],
+["trump","ratner","business","Directed Melania doc"],
+["trump","netanyahu","political","Close allies"],
+
+// === OBAMA WEB ===
+["obama","biden","political","President-VP"],
+["obama","hillary","political","Cabinet, rivals turned allies"],
+["obama","pelosi","political","Democratic leadership"],
+["obama","schumer","political","Democratic leadership"],
+["obama","kerry","political","Sec of State"],
+["obama","gore","political","Democratic politics"],
+["obama","harris","political","Endorsed"],
+["obama","oprah","social","Close friends, supporter"],
+["obama","clooney","social","Close friends"],
+["obama","jayz","social","Campaign supporter"],
+["obama","beyonce","social","Campaign performer"],
+["obama","springsteen","social","Close friends, podcast"],
+["obama","spielberg","social","Hollywood supporter"],
+["obama","hanks","social","Close friends"],
+["obama","sanders","political","Democratic politics"],
+["obama","aoc","political","Democratic politics"],
+
+// === BIDEN WEB ===
+["biden","harris","political","President-VP"],
+["biden","pelosi","political","Democratic leadership"],
+["biden","schumer","political","Democratic leadership"],
+["biden","newsom","political","Democratic politics"],
+["biden","sanders","political","Democratic rivals"],
+
+// === REPUBLICAN WEB ===
+["pence","romney","political","Republican"],
+["desantis","romney","political","Republican"],
+["rfk","rogan","social","Podcast appearances"],
+["rfk","trump","political","Cabinet"],
+["kushner","ivanka","family","Married"],
+["kushner","mbs","political","Diplomatic relationship"],
+["barr","bondi","political","Successive AGs"],
+
+// === UK POLITICS/ROYALTY WEB ===
+["andrew","ferguson","family","Former couple"],
+["andrew","charles","family","Brothers"],
+["andrew","william","family","Uncle-nephew"],
+["andrew","harry","family","Uncle-nephew"],
+["andrew","sjoberg","legal","Named in deposition"],
+["andrew","mandelson","social","British politics"],
+["andrew","campbell","social","Social events"],
+["charles","william","family","Father-son"],
+["charles","harry","family","Father-son"],
+["william","harry","family","Brothers"],
+["mandelson","blair","political","Labour"],
+["mandelson","gordon-brown","political","Labour"],
+["blair","cameron","political","Successive PMs"],
+["blair","gordon-brown","political","Successive PMs"],
+["cameron","starmer","political","UK politics"],
+["gordon-brown","cameron","political","Successive PMs"],
+["ferguson","oprah","social","2010 interview"],
+["harry","oprah","social","2021 interview"],
+["harry","beyonce","social","Celebrity circles"],
+["william","beckham","social","Close friends"],
+["william","swift","social","Met at concerts"],
+["charles","eltonjohn","social","Close friends"],
+
+// === INTERNATIONAL WEB ===
+["barak","netanyahu","political","Israeli rivals"],
+["barak","thiel","business","Introduced through Epstein"],
+["barak","summers","political","Washington circles"],
+["barak","rothschild","business","Epstein emails"],
+["netanyahu","mbs","political","Diplomacy"],
+["netanyahu","trump","political","Close allies"],
+["macron","trudeau","political","G7"],
+["macron","merkel","political","EU leaders"],
+["macron","starmer","political","European leaders"],
+["macron","biden","political","NATO"],
+["trudeau","biden","political","Neighbors"],
+["trudeau","obama","political","Close allies"],
+["merkel","obama","political","G7"],
+["merkel","macron","political","EU"],
+["putin","netanyahu","political","Diplomacy"],
+["putin","mbs","political","OPEC+"],
+["putin","trump","political","Geopolitics"],
+["putin","merkel","political","EU-Russia"],
+["rod-larsen","brende","political","Norwegian politics"],
+["rod-larsen","mette","social","Norwegian circles"],
+["dalai","bono","social","Humanitarian work"],
+["sofia-sw","mette","social","Scandinavian royalty"],
+
+// ===================================
+// TECH WEB (very dense)
+// ===================================
+["gates","nadella","business","Microsoft succession"],
+["gates","buffett","business","Best friends, philanthropy"],
+["gates","cook","business","Tech industry"],
+["gates","summers","political","Economic policy"],
+["gates","hoffman","business","Tech philanthropy"],
+["gates","jobs","business","Rivals turned respectful"],
+["gates","bono","social","Philanthropy partners"],
+["gates","oprah","social","Interviews"],
+["brin","page","business","Google co-founders"],
+["brin","schmidt","business","Google leadership"],
+["brin","wojcicki","family","Former couple"],
+["brin","pichai","business","Alphabet"],
+["brin","brooks","photo","Photographed at Epstein event"],
+["page","pichai","business","CEO succession"],
+["page","schmidt","business","Google leadership"],
+["musk","thiel","business","PayPal co-founders"],
+["musk","dorsey","business","Tech/social"],
+["musk","hoffman","business","PayPal, feud"],
+["musk","bezos","business","Space rivals"],
+["musk","rogan","social","Frequent podcast guest"],
+["musk","altman","business","OpenAI co-founders, rivals"],
+["musk","ackman","social","Public allies"],
+["zuckerberg","sandberg","business","Meta leadership"],
+["zuckerberg","thiel","business","Early investor/board"],
+["zuckerberg","pichai","business","Tech peers"],
+["zuckerberg","musk","business","Cage fight challenge"],
+["thiel","schmidt","business","Tech industry"],
+["bezos","sandberg","business","Tech"],
+["hoffman","sandberg","business","Silicon Valley"],
+["hoffman","dorsey","business","Tech"],
+["cook","nadella","business","CEO peers"],
+["cook","pichai","business","CEO peers"],
+["cook","jobs","business","Apple succession"],
+["jobs","woz","business","Apple co-founders"],
+["jobs","ive","business","Apple design"],
+["altman","nadella","business","Microsoft-OpenAI"],
+["altman","hoffman","business","AI investors"],
+["dorsey","rogan","social","Podcast guest"],
+["schmidt","pichai","business","Google succession"],
+["kalanick","musk","business","Tech industry"],
+["hastings","sandberg","business","Silicon Valley"],
+["hastings","gates","business","Tech/philanthropy"],
+
+// ===================================
+// FINANCE WEB
+// ===================================
+["wexner","groff","business","Organization"],
+["staley","jpmorgan","business","Former exec"],
+["staley","dimon","business","Colleagues"],
+["black-l","dubin-g","business","Finance industry"],
+["black-l","marc-rowan","business","Apollo co-founders"],
+["dubin-e","dubin-g","family","Married"],
+["jpmorgan","deutschebank","business","Successive Epstein banks"],
+["jpmorgan","dimon","business","CEO"],
+["dimon","blankfein","business","Wall St CEO peers"],
+["dimon","buffett","business","Financial leaders"],
+["buffett","gates","business","Best friends"],
+["buffett","soros","business","Legends"],
+["buffett","dimon","business","Finance"],
+["soros","dalio","business","Hedge funds"],
+["ackman","icahn","business","Activist investors"],
+["ackman","dimon","business","Wall Street"],
+["perelman","murdoch","social","NYC circles"],
+["tisch","spielberg","business","Forrest Gump"],
+["koch","romney","political","GOP donors"],
+["lutnick","dimon","business","Wall Street"],
+["lutnick","trump","political","Commerce Sec"],
+["marc-rowan","black-l","business","Apollo"],
+
+// ===================================
+// HOLLYWOOD FILM WEB (very dense)
+// ===================================
+["dicaprio","pitt","business","Once Upon a Time, friends"],
+["dicaprio","scorsese","business","Frequent collaborations"],
+["dicaprio","clooney","social","A-list"],
+["dicaprio","campbell","social","Fashion"],
+["dicaprio","depp","social","Hollywood"],
+["dicaprio","willis","social","Hollywood"],
+["dicaprio","blanchett","business","Film industry"],
+["dicaprio","robbie","business","Wolf of Wall Street"],
+["dicaprio","streep","business","Don't Look Up"],
+["dicaprio","lawrence","business","Don't Look Up"],
+["dicaprio","damon","social","Hollywood friends"],
+["pitt","clooney","business","Ocean's films, friends"],
+["pitt","jolie","family","Former married couple"],
+["pitt","aniston","family","Former married couple"],
+["pitt","damon","business","Ocean's films"],
+["pitt","robbie","business","Babylon"],
+["pitt","deniro","social","Hollywood"],
+["pitt","spielberg","social","Hollywood"],
+["clooney","oprah","social","Celebrity activism"],
+["clooney","obama","social","Close friends"],
+["clooney","damon","business","Ocean's films, close friends"],
+["clooney","affleck","social","Hollywood"],
+["clooney","streep","social","Hollywood"],
+["clooney","jolie","social","Humanitarian work"],
+["spielberg","hanks","business","Saving Private Ryan, many films"],
+["spielberg","scorsese","business","Director peers"],
+["spielberg","oprah","business","Color Purple"],
+["spielberg","streep","business","Film collaborations"],
+["spielberg","deniro","business","Hollywood"],
+["spielberg","diaz","business","Film industry"],
+["spielberg","tisch","business","Forrest Gump"],
+["spielberg","cruise","business","Minority Report, War of Worlds"],
+["spielberg","freeman","business","Amistad"],
+["spielberg","damon","business","Saving Private Ryan"],
+["scorsese","deniro","business","Taxi Driver, many films"],
+["scorsese","dicaprio","business","Gangs of NY, many films"],
+["scorsese","pacino","business","The Irishman"],
+["scorsese","nicholson","business","The Departed"],
+["scorsese","stone-e","business","Hollywood"],
+["hanks","oprah","social","Close friends"],
+["hanks","streep","business","The Post"],
+["hanks","spielberg","business","Frequent collaborations"],
+["hanks","damon","business","Saving Private Ryan"],
+["hanks","washington","social","Acting peers"],
+["hanks","freeman","social","Acting peers"],
+["deniro","pacino","business","Heat, The Irishman"],
+["deniro","nicholson","social","Hollywood legends"],
+["deniro","spacey","social","Acting circles"],
+["deniro","scorsese","business","Legendary partnership"],
+["deniro","streep","business","Film industry"],
+["cruise","spielberg","business","Minority Report"],
+["cruise","nicholson","business","A Few Good Men"],
+["cruise","oprah","social","Famous couch moment"],
+["aniston","pitt","family","Former couple"],
+["aniston","cox","social","Friends cast"],
+["aniston","affleck","social","Hollywood"],
+["jolie","pitt","family","Former couple"],
+["jolie","clooney","social","Humanitarian"],
+["jolie","depp","business","Tourist"],
+["damon","affleck","business","Good Will Hunting, close friends"],
+["damon","pitt","business","Ocean's films"],
+["damon","clooney","business","Ocean's films"],
+["affleck","damon","business","Lifelong friends"],
+["affleck","lopez","family","Married"],
+["washington","freeman","business","Film industry"],
+["washington","hanks","social","Acting peers"],
+["washington","pacino","social","Acting legends"],
+["portman","dicaprio","social","Hollywood"],
+["portman","blanchett","social","Acting peers"],
+["lawrence","dicaprio","business","Don't Look Up"],
+["lawrence","streep","business","Don't Look Up, Joy"],
+["robbie","dicaprio","business","Wolf of Wall Street"],
+["robbie","pitt","business","Once Upon a Time, Babylon"],
+["stone-e","lawrence","social","Hollywood peers"],
+["stone-e","robbie","social","Hollywood peers"],
+
+// === WEINSTEIN WEB (key connector) ===
+["weinstein","allen","business","Film collaborations"],
+["weinstein","streep","business","Film industry"],
+["weinstein","pitt","business","Film industry"],
+["weinstein","clooney","business","Film industry"],
+["weinstein","oprah","social","Entertainment"],
+["weinstein","spielberg","business","Hollywood"],
+["weinstein","hanks","business","Hollywood"],
+["weinstein","diaz","business","Film"],
+["weinstein","blanchett","business","Film"],
+["weinstein","portman","business","Film"],
+["weinstein","lawrence","business","Silver Linings Playbook"],
+["weinstein","boies","legal","Represented Weinstein"],
+["weinstein","clinton","social","Democratic fundraising"],
+["weinstein","siegal","social","NYC events"],
+
+// ===================================
+// MUSIC WEB (very dense)
+// ===================================
+["beyonce","jayz","family","Married"],
+["jayz","rihanna","business","Roc Nation"],
+["jayz","kanye","business","Watch the Throne, then rivals"],
+["jayz","drake","business","Music industry"],
+["jayz","obama","social","Campaign supporter"],
+["jayz","kardashian","social","Celebrity circles"],
+["jayz","oprah","social","Entertainment"],
+["jayz","pushat","business","G.O.O.D. Music"],
+["beyonce","oprah","social","Close friends"],
+["beyonce","obama","social","Performed at inauguration"],
+["beyonce","swift","social","VMAs, music industry"],
+["beyonce","adele","social","Grammy peers"],
+["beyonce","gaga","social","Music industry"],
+["beyonce","rihanna","social","Music industry"],
+["beyonce","harry","social","Celebrity circles"],
+["swift","kardashian","social","Feud/reconciliation"],
+["swift","kanye","social","VMAs incident"],
+["swift","gaga","social","Music industry"],
+["swift","bieber","social","Music industry"],
+["swift","drake","social","Music industry"],
+["swift","william","social","Met at concerts"],
+["swift","fallon","social","TV appearances"],
+["rihanna","drake","social","Music, relationship"],
+["rihanna","campbell","social","Fashion"],
+["rihanna","madonna","social","Music industry"],
+["drake","bieber","business","Music collaborations"],
+["drake","kanye","social","Rap rivalry"],
+["drake","lebron","social","Close friends"],
+["kanye","kardashian","family","Former married couple"],
+["kanye","trump","social","White House visit"],
+["kanye","jayz","business","Former close collaborators"],
+["kanye","pushat","business","G.O.O.D. Music president"],
+["kanye","musk","social","Twitter/X allies"],
+["adele","beyonce","social","Grammy moment"],
+["adele","eltonjohn","social","British music"],
+["adele","oprah","social","2021 interview"],
+["gaga","eltonjohn","business","Music collaboration"],
+["gaga","oprah","social","Interviews"],
+["gaga","madonna","social","Pop rivalry/respect"],
+["gaga","cooper","social","A Star is Born"],
+["madonna","jackson","social","Pop royalty peers"],
+["madonna","jagger","social","Music legends"],
+["bono","gates","social","Philanthropy"],
+["bono","obama","social","Activism"],
+["bono","oprah","social","Philanthropy"],
+["bono","eltonjohn","social","Music/activism"],
+["eltonjohn","charles","social","Close friends"],
+["eltonjohn","diana-ross","social","Music legends"],
+["eltonjohn","jagger","social","British rock"],
+["eltonjohn","harry","social","Close, played Diana's funeral"],
+["springsteen","obama","social","Close friends, podcast"],
+["springsteen","bono","social","Rock legends"],
+["springsteen","jagger","social","Rock legends"],
+["jagger","keithrichards","business","Rolling Stones"],
+["keithrichards","depp","social","Pirates of Caribbean"],
+["jackson","diana-ross","business","Motown mentorship"],
+["bieber","jayz","business","Music"],
+["bieber","kardashian","social","Celebrity circles"],
+
+// === TV/COMEDY WEB ===
+["kimmel","stephanopoulos","business","TV hosts"],
+["kimmel","couric","business","TV"],
+["kimmel","fallon","business","Late night peers"],
+["kimmel","colbert","business","Late night peers"],
+["kimmel","trump","social","Public feud"],
+["fallon","colbert","business","Late night peers"],
+["fallon","trump","social","Hair-tousling moment"],
+["colbert","oprah","social","Interviews"],
+["colbert","obama","social","Interviews"],
+["chappelle","rock","business","Comedy peers"],
+["chappelle","rogan","social","Comedy/podcast"],
+["chappelle","kanye","social","Comedy specials"],
+["rock","hart","business","Comedy"],
+["rock","oprah","social","Entertainment"],
+["rock","smith","social","Oscar slap"],
+["hart","dwayne","business","Jumanji, close friends"],
+["hart","oprah","social","Interviews"],
+["kardashian","jenner-ky","family","Sisters"],
+["kardashian","kanye","family","Former couple"],
+["kardashian","trump","social","Criminal justice reform"],
+["kardashian","beyonce","social","Celebrity circles"],
+["jenner-ky","bieber","social","Celebrity circles"],
+
+// === FASHION/MEDIA WEB ===
+["wintour","campbell","social","Fashion industry"],
+["wintour","dickinson","social","Fashion"],
+["wintour","rihanna","social","Met Gala"],
+["wintour","beyonce","social","Met Gala"],
+["wintour","kardashian","social","Met Gala"],
+["wintour","oprah","social","Media moguls"],
+["wintour","clooney","social","Met Gala"],
+["campbell","beckham","social","Fashion"],
+["campbell","rihanna","social","Fashion"],
+["campbell","jagger","social","British celebrity"],
+["campbell","dickinson","social","Supermodel peers"],
+["siegal","weinstein","social","NYC events, King's Speech campaign"],
+["siegal","ratner","social","NYC circles"],
+["siegal","nair","email","Email to Epstein"],
+["siegal","rose","social","NYC media"],
+["siegal","lauer","social","NYC media"],
+["siegal","couric","social","NYC media"],
+
+// === MEDIA WEB ===
+["murdoch","hannity","business","Fox owner-host"],
+["murdoch","carlson","business","Former Fox host"],
+["murdoch","bloomberg","social","Media moguls"],
+["murdoch","jagger","social","NYC circles"],
+["murdoch","blair","social","Media-political"],
+["bloomberg","cuomo","political","NY politics"],
+["stephanopoulos","couric","business","TV"],
+["stephanopoulos","cooper","business","News"],
+["cooper","lemon","business","CNN"],
+["lemon","oprah","business","Media"],
+["rogan","musk","social","Frequent guest"],
+["rogan","rfk","social","Guest"],
+["rogan","dorsey","social","Guest"],
+["rogan","degrasse","social","Guest"],
+["rogan","chappelle","social","Comedy/podcast"],
+["hannity","carlson","business","Fox colleagues"],
+["carlson","trump","social","Media ally"],
+["wolff","trump","social","Fire and Fury book"],
+["rose","lauer","social","TV peers"],
+
+// === SCIENCE WEB ===
+["minsky","mit","business","Professor"],
+["chomsky","mit","business","Professor"],
+["nowak","harvard","business","Professor"],
+["hawking","minsky","social","Physics/AI"],
+["hawking","degrasse","social","Physics"],
+["krauss","hawking","social","Physics"],
+["krauss","degrasse","social","Science communicators"],
+["pinker","harvard","business","Professor"],
+["pinker","chomsky","social","Linguistics"],
+["degrasse","rogan","social","Podcast guest"],
+["ariely","pinker","social","Academic"],
+["brockman","pinker","social","Edge Foundation"],
+["brockman","krauss","social","Edge Foundation"],
+["brockman","gates","social","Edge Foundation events"],
+["trivers","chomsky","social","Academic"],
+
+// === SPORTS WEB ===
+["lebron","drake","social","Close friends"],
+["lebron","jayz","business","SpringHill"],
+["lebron","obama","social","Supporter"],
+["lebron","jordan","business","NBA legends"],
+["jordan","obama","social","Presidential Medal"],
+["jordan","trump","social","Golf"],
+["jordan","pitt","social","Celebrity"],
+["serena","beyonce","social","Close friends"],
+["serena","oprah","social","Interviews"],
+["serena","drake","social","Celebrity circles"],
+["serena","beckham","social","Sports"],
+["brady","trump","social","Golf friends"],
+["brady","gaga","social","Super Bowl performance"],
+["brady","beckham","social","Sports stars"],
+["beckham","eltonjohn","social","British celebrities"],
+["beckham","william","social","Close friends"],
+["beckham","ronaldo","business","Soccer"],
+
+// === ADD "lopez" node for Affleck connection ===
+];
+N["lopez"]={n:"Jennifer Lopez",d:"Singer/actress",c:"entertainment"};
+N["cox"]={n:"Courteney Cox",d:"Actress",c:"entertainment"};
+N["smith"]={n:"Will Smith",d:"Actor",c:"entertainment"};
+N["dwayne"]={n:"Dwayne Johnson",d:"Actor",c:"entertainment"};
+N["ive"]={n:"Jony Ive",d:"Designer, former Apple",c:"business"};
+N["band"]={n:"Doug Band",d:"Clinton aide",c:"politics"};
+N["wasserman"]={n:"Casey Wasserman",d:"LA28 Olympics chairman",c:"business"};
+// Extra connections for new nodes
+E.push(["lopez","affleck","family","Married"]);
+E.push(["lopez","oprah","social","Interviews"]);
+E.push(["lopez","jayz","business","Music industry"]);
+E.push(["smith","rock","social","Oscar slap"]);
+E.push(["smith","oprah","social","Interviews"]);
+E.push(["smith","jayz","social","Entertainment"]);
+E.push(["dwayne","hart","business","Jumanji, close friends"]);
+E.push(["dwayne","oprah","social","Interviews"]);
+E.push(["cox","aniston","social","Friends cast, close friends"]);
+E.push(["band","clinton","political","Chief aide"]);
+E.push(["ive","cook","business","Apple"]);
+E.push(["wasserman","maxwell","email","Massage offer emails"]);
+E.push(["oz","trump","political","Endorsed Senate run"]);
+E.push(["oz","oprah","social","TV show mentor"]);
+E.push(["doja","rihanna","business","Music industry"]);
+E.push(["doja","drake","social","Music industry"]);
+
+// ========================================
+// ADDITIONAL DEGREE-1 CONNECTIONS
+// From black book, flight logs, court docs, DOJ files
+// ========================================
+
+// BLACK BOOK notable names not yet in database
+N["blaine"]={n:"David Blaine",d:"Magician, black book, performed at Epstein dinner 2003",c:"entertainment"};
+N["d-hoffman"]={n:"Dustin Hoffman",d:"Actor, black book",c:"entertainment"};
+N["hurley"]={n:"Elizabeth Hurley",d:"Actress/model, black book",c:"entertainment"};
+N["ford"]={n:"Tom Ford",d:"Designer/filmmaker, black book",c:"entertainment"};
+N["fiennes"]={n:"Ralph Fiennes",d:"Actor, black book",c:"entertainment"};
+N["pcollins"]={n:"Phil Collins",d:"Musician, black book",c:"entertainment"};
+N["cleese"]={n:"John Cleese",d:"Actor/comedian, black book",c:"entertainment"};
+N["love"]={n:"Courtney Love",d:"Musician, black book (circled)",c:"entertainment"};
+N["lebon"]={n:"Simon Le Bon",d:"Duran Duran, black book",c:"entertainment"};
+N["ferry"]={n:"Bryan Ferry",d:"Roxy Music, black book",c:"entertainment"};
+N["turlington"]={n:"Christy Turlington",d:"Supermodel, black book",c:"entertainment"};
+N["driver"]={n:"Minnie Driver",d:"Actress, black book",c:"entertainment"};
+N["dunne"]={n:"Griffin Dunne",d:"Actor/filmmaker, black book",c:"entertainment"};
+N["g-hamilton"]={n:"George Hamilton",d:"Actor, black book",c:"entertainment"};
+N["bushnell"]={n:"Candice Bushnell",d:"Author (Sex and the City), black book",c:"entertainment"};
+N["walters"]={n:"Barbara Walters",d:"Late journalist, black book",c:"media"};
+N["kissinger"]={n:"Henry Kissinger",d:"Late Sec of State, black book",c:"politics"};
+N["wallace"]={n:"Mike Wallace",d:"Late 60 Minutes, black book",c:"media"};
+N["ecclestone"]={n:"Bernie Ecclestone",d:"F1 mogul, black book",c:"business"};
+N["briatore"]={n:"Flavio Briatore",d:"F1/nightclub mogul, black book (circled)",c:"business"};
+N["balazs"]={n:"André Balazs",d:"Hotelier, black book",c:"business"};
+N["s-forbes"]={n:"Steve Forbes",d:"Forbes magazine, black book",c:"media"};
+N["bronfman"]={n:"Edgar Bronfman Jr.",d:"Seagram heir, black book",c:"finance"};
+N["berggruen"]={n:"Nicolas Berggruen",d:"Investor, black book",c:"finance"};
+N["p-soros"]={n:"Peter Soros",d:"Nephew of George, black book (circled)",c:"finance"};
+N["c-black"]={n:"Conrad Black",d:"Media baron, black book",c:"media"};
+N["ivana"]={n:"Ivana Trump",d:"Businesswoman, black book",c:"entertainment"};
+N["blaine-trump"]={n:"Blaine Trump",d:"Socialite, Robert Trump's ex-wife, black book",c:"entertainment"};
+N["robert-trump"]={n:"Robert Trump",d:"Late brother of Donald, black book",c:"politics"};
+N["ethel-k"]={n:"Ethel Kennedy",d:"RFK's widow, black book",c:"politics"};
+// rfk already in database
+N["kford"]={n:"Katie Ford",d:"Ford Models CEO, black book",c:"business"};
+N["casablancas"]={n:"John Casablancas",d:"Elite Model Mgmt founder, modeling connection",c:"business"};
+N["huntsman"]={n:"Jon Huntsman Sr.",d:"Late billionaire, black book",c:"finance"};
+N["b-weinstein"]={n:"Bob Weinstein",d:"Film producer, black book",c:"entertainment"};
+N["shriver"]={n:"Bobby Shriver",d:"Kennedy family, black book",c:"politics"};
+
+// DOJ FILES / COURT DOCS / PHOTOS (Jan-Feb 2026)
+N["karp"]={n:"Brad Karp",d:"Paul Weiss chairman, Epstein dinner guest",c:"legal"};
+N["todt"]={n:"Jean Todt",d:"Former FIA president, visited Epstein 2017",c:"business"};
+N["trivers"]={n:"Robert Trivers",d:"Biologist, $40K from Epstein",c:"science"};
+N["plaskett"]={n:"Stacey Plaskett",d:"USVI delegate, texted during hearing",c:"politics"};
+N["shuliak"]={n:"Karyna Shuliak",d:"Epstein girlfriend, $100M estate beneficiary",c:"inner-circle"};
+N["kahn"]={n:"Richard Kahn",d:"Estate co-executor, $25M beneficiary",c:"legal"};
+N["visoski"]={n:"Larry Visoski",d:"Chief pilot, Lolita Express",c:"inner-circle"};
+N["rodgers"]={n:"Alfredo Rodriguez",d:"Butler, leaked black book",c:"inner-circle"};
+N["farmer"]={n:"Maria Farmer",d:"Reported abuse to FBI in 1996",c:"legal"};
+N["ransome"]={n:"Sarah Ransome",d:"Survivor, alleged meeting w/ Brin",c:"legal"};
+N["pritzker"]={n:"Tom Pritzker",d:"Hyatt chair, social acquaintance",c:"finance"};
+N["ranieri"]={n:"Lewis Ranieri",d:"Financier, socialized with Epstein",c:"finance"};
+N["listerman"]={n:"Peter Listerman",d:"Model scout, DOJ subject",c:"inner-circle"};
+N["seckel"]={n:"Al Seckel",d:"Perceptual scientist, edited Epstein Wikipedia",c:"science"};
+N["ito"]={n:"Joi Ito",d:"Former MIT Media Lab director, resigned",c:"science"};
+
+// FLIGHT LOG frequent flyers not yet added
+
+// PROMINENT INDIVIDUALS FROM WIKIPEDIA ARTICLE (Jan/Feb 2026 files)
+N["pushat"]={n:"Pusha T",d:"Rapper, FBI victim intake form",c:"entertainment"};
+N["rod-larsen"]={n:"Terje Rød-Larsen",d:"Diplomat, 'best friend', $5M per child",c:"politics"};
+N["juul"]={n:"Mona Juul",d:"Norwegian diplomat, resigned Feb 2026",c:"politics"};
+N["brende"]={n:"Børge Brende",d:"WEF CEO, in files",c:"politics"};
+N["jagland"]={n:"Thorbjørn Jagland",d:"Former Norwegian PM, Epstein-Putin link",c:"politics"};
+N["nair"]={n:"Mira Nair",d:"Director, Siegal email mention",c:"entertainment"};
+N["wasserman"]={n:"Casey Wasserman",d:"LA28 Olympics chair, Maxwell emails",c:"business"};
+
+// NOW ADD ALL THE NEW EDGES (Epstein direct)
+E.push(["epstein","blaine","social","Black book, performed at dinner 2003"]);
+E.push(["epstein","d-hoffman","social","Black book"]);
+E.push(["epstein","hurley","social","Black book"]);
+E.push(["epstein","ford","social","Black book"]);
+E.push(["epstein","fiennes","social","Black book"]);
+E.push(["epstein","pcollins","social","Black book, photos in files"]);
+E.push(["epstein","cleese","social","Black book"]);
+E.push(["epstein","love","social","Black book (circled)"]);
+E.push(["epstein","lebon","social","Black book"]);
+E.push(["epstein","ferry","social","Black book"]);
+E.push(["epstein","turlington","social","Black book"]);
+E.push(["epstein","driver","social","Black book"]);
+E.push(["epstein","dunne","social","Black book"]);
+E.push(["epstein","g-hamilton","social","Black book"]);
+E.push(["epstein","bushnell","social","Black book"]);
+E.push(["epstein","walters","social","Black book"]);
+E.push(["epstein","kissinger","social","Black book"]);
+E.push(["epstein","wallace","social","Black book"]);
+E.push(["epstein","ecclestone","social","Black book"]);
+E.push(["epstein","briatore","social","Black book (circled)"]);
+E.push(["epstein","balazs","social","Black book"]);
+E.push(["epstein","s-forbes","social","Black book"]);
+E.push(["epstein","bronfman","social","Black book"]);
+E.push(["epstein","berggruen","social","Black book"]);
+E.push(["epstein","p-soros","social","Black book (circled)"]);
+E.push(["epstein","c-black","social","Black book"]);
+E.push(["epstein","ivana","social","Black book"]);
+E.push(["epstein","blaine-trump","social","Black book"]);
+E.push(["epstein","robert-trump","social","Black book"]);
+E.push(["epstein","ethel-k","social","Black book"]);
+E.push(["epstein","kford","social","Black book"]);
+E.push(["epstein","casablancas","business","Model agency connection"]);
+E.push(["epstein","huntsman","social","Black book"]);
+E.push(["epstein","b-weinstein","social","Black book"]);
+E.push(["epstein","shriver","social","Black book"]);
+E.push(["epstein","karp","social","Dinner guest, 'evening I'll never forget'"]);
+E.push(["epstein","todt","social","Visited home 2017"]);
+E.push(["epstein","plaskett","email","Texted during 2019 hearing"]);
+E.push(["epstein","shuliak","social","Girlfriend, $100M beneficiary"]);
+E.push(["epstein","kahn","legal","Estate co-executor, $25M"]);
+E.push(["epstein","visoski","business","Chief pilot"]);
+E.push(["epstein","rodgers","business","Butler, leaked black book"]);
+E.push(["epstein","farmer","legal","Reported abuse 1996"]);
+E.push(["epstein","ransome","legal","Survivor"]);
+E.push(["epstein","pritzker","social","Social acquaintance"]);
+E.push(["epstein","ranieri","social","Socialized with"]);
+E.push(["epstein","listerman","business","Model scout"]);
+E.push(["epstein","seckel","email","Edited Epstein's Wikipedia page"]);
+E.push(["epstein","ito","financial","MIT donations, meetings"]);
+E.push(["epstein","pushat","legal","FBI victim intake form"]);
+E.push(["epstein","juul","social","Norwegian diplomatic circles"]);
+E.push(["epstein","jagland","social","Facilitated Putin meetings"]);
+
+// Cross-connections for new nodes
+E.push(["briatore","campbell","social","Introduced Campbell to Epstein"]);
+E.push(["briatore","ecclestone","business","F1 racing"]);
+E.push(["briatore","todt","business","F1/FIA racing"]);
+E.push(["ford","wintour","business","Fashion industry"]);
+E.push(["ford","campbell","social","Fashion industry"]);
+E.push(["turlington","campbell","social","Supermodels"]);
+E.push(["turlington","dickinson","social","Modeling industry"]);
+E.push(["casablancas","brunel","business","Modeling industry"]);
+E.push(["casablancas","kford","business","Rival model agencies"]);
+E.push(["b-weinstein","weinstein","family","Brothers"]);
+E.push(["ivana","trump","family","Former married couple"]);
+E.push(["robert-trump","trump","family","Brothers"]);
+E.push(["blaine-trump","robert-trump","family","Former married couple"]);
+E.push(["ethel-k","rfk","family","Mother-son"]);
+E.push(["shriver","ethel-k","family","Kennedy family"]);
+E.push(["shriver","kennedy-t","family","Kennedy family"]);
+E.push(["kissinger","clinton","political","Foreign policy"]);
+E.push(["kissinger","trump","social","Met multiple times"]);
+E.push(["p-soros","soros","family","Uncle-nephew"]);
+E.push(["walters","oprah","business","TV journalism pioneers"]);
+E.push(["walters","stephanopoulos","business","ABC"]);
+E.push(["wallace","murdoch","business","Fox/CBS"]);
+E.push(["c-black","murdoch","business","Media moguls"]);
+E.push(["ito","mit","business","Director"]);
+E.push(["ito","brockman","social","Edge Foundation"]);
+E.push(["rod-larsen","juul","family","Married"]);
+E.push(["rod-larsen","jagland","political","Norwegian politics"]);
+E.push(["rod-larsen","todt","social","Introduced Todt to Epstein"]);
+E.push(["jagland","putin","political","Facilitated Epstein meeting attempt"]);
+E.push(["ransome","brin","social","Alleged meeting on island"]);
+E.push(["d-hoffman","spielberg","business","Hook, film collaborations"]);
+E.push(["d-hoffman","streep","business","Film industry"]);
+E.push(["fiennes","blanchett","social","British actors"]);
+E.push(["hurley","campbell","social","British celebrity"]);
+E.push(["berggruen","gates","business","Philanthropy"]);
+E.push(["pritzker","gates","business","Philanthropy"]);
+E.push(["seckel","brockman","social","Edge Foundation"]);
+E.push(["blaine","brin","social","Performed at Epstein dinner attended by Brin"]);
+E.push(["blaine","zuckerman","social","Same Epstein dinner 2003"]);
+// Missing node for harris
+N["harris"]={n:"Kamala Harris",d:"Vice President",c:"politics"};
+
+// ========================================================================
+// GRAPH ENGINE
+// ========================================================================
+class Graph{
+  constructor(){
+    this.adj={};
+    Object.keys(N).forEach(id=>this.adj[id]=[]);
+    E.forEach(([a,b,t,l])=>{
+      if(this.adj[a]&&this.adj[b]){
+        this.adj[a].push({to:b,type:t,label:l});
+        this.adj[b].push({to:a,type:t,label:l});
+      }
+    });
+  }
+  bfs(from,to){
+    if(from===to)return{path:[from],edges:[],degree:0};
+    const v=new Set([from]),q=[[from,[from],[]]];
+    while(q.length){
+      const[cur,path,edges]=q.shift();
+      for(const nb of this.adj[cur]){
+        if(!v.has(nb.to)){
+          const np=[...path,nb.to],ne=[...edges,nb];
+          if(nb.to===to)return{path:np,edges:ne,degree:np.length-1};
+          v.add(nb.to);q.push([nb.to,np,ne]);
+        }
+      }
+    }
+    return null;
+  }
+  en(id){const r=this.bfs(id,"epstein");return r?r.degree:Infinity;}
+}
+const graph=new Graph();
+
+// ========================================================================
+// STATS
+// ========================================================================
+const total=Object.keys(N).length;
+const totalEdges=E.length;
+const dist={};
+let avg=0,cnt=0,mx=0;
+Object.keys(N).forEach(id=>{
+  if(id==="epstein")return;
+  const d=graph.en(id);
+  if(d<Infinity){avg+=d;cnt++;mx=Math.max(mx,d);dist[d]=(dist[d]||0)+1;}
+  else{dist['∞']=(dist['∞']||0)+1;}
+});
+avg=(avg/cnt).toFixed(1);
+
+document.getElementById('stats').innerHTML=`
+  <div class="sc"><div class="sn">${total}</div><div class="sl">People & Entities</div></div>
+  <div class="sc"><div class="sn">${totalEdges}</div><div class="sl">Connections</div></div>
+  <div class="sc"><div class="sn">${avg}</div><div class="sl">Avg Epstein #</div></div>
+  <div class="sc"><div class="sn">${mx}</div><div class="sl">Max Degrees</div></div>
+  <div class="sc"><div class="sn">${dist[1]||0}</div><div class="sl">Direct (EN=1)</div></div>
+  <div class="sc"><div class="sn">${(dist[2]||0)+(dist[3]||0)+(dist[4]||0)+(dist[5]||0)}</div><div class="sl">Indirect (EN≥2)</div></div>`;
+document.getElementById('ttl').textContent=total;
+
+// Distribution chart
+const maxCnt=Math.max(...Object.entries(dist).filter(([k])=>k!=='∞').map(([,v])=>v));
+const clrs=['var(--a)','var(--orange)','var(--gold)','var(--green)','var(--blue)','var(--purple)','var(--td)'];
+let dh='<div style="padding:12px 0"><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--td);margin-bottom:8px">Epstein Number Distribution</div><div class="dch">';
+for(let i=0;i<=mx;i++){
+  const c=dist[i]||0;const h=c?Math.max(8,(c/maxCnt)*100):0;
+  dh+=`<div class="dbw"><div class="dbc">${c}</div><div style="flex:1;display:flex;align-items:flex-end;width:100%"><div style="height:${h}%;width:100%;border-radius:3px 3px 0 0;background:${clrs[Math.min(i,clrs.length-1)]}"></div></div><div class="dbl">${i}</div></div>`;
+}
+dh+='</div></div>';
+document.getElementById('dsc').innerHTML=dh;
+
+// ========================================================================
+// AUTOCOMPLETE & CALCULATE
+// ========================================================================
+const inp=document.getElementById('inp'),ac=document.getElementById('ac');
+let selId=null;
+inp.addEventListener('input',()=>{
+  const q=inp.value.toLowerCase().trim();selId=null;
+  if(!q){ac.classList.remove('on');return;}
+  const m=Object.entries(N).filter(([,v])=>v.n.toLowerCase().includes(q)).slice(0,8);
+  if(!m.length){ac.classList.remove('on');return;}
+  ac.innerHTML=m.map(([id,v])=>`<div class="ai" data-id="${id}"><span>${v.n}</span><span style="font-size:9px;color:var(--td)">${v.c}</span></div>`).join('');
+  ac.classList.add('on');
+  ac.querySelectorAll('.ai').forEach(el=>{
+    el.addEventListener('mousedown',e=>{e.preventDefault();inp.value=N[el.dataset.id].n;selId=el.dataset.id;ac.classList.remove('on');});
+  });
+});
+inp.addEventListener('blur',()=>setTimeout(()=>ac.classList.remove('on'),200));
+inp.addEventListener('keydown',e=>{if(e.key==='Enter'){ac.classList.remove('on');calc();}});
+
+function calc(){
+  let id=selId;
+  if(!id){const q=inp.value.toLowerCase().trim();const m=Object.entries(N).find(([,v])=>v.n.toLowerCase()===q);if(m)id=m[0];}
+  const rd=document.getElementById('res');
+  if(!id){rd.innerHTML='<div class="rc"><div class="np">Person not found. Browse the list below or try a different spelling.</div></div>';rd.classList.add('on');return;}
+  if(id==='epstein'){rd.innerHTML='<div class="rc"><div class="rh"><div class="rn c0">0</div><div class="rs">That <em>is</em> Jeffrey Epstein.</div></div></div>';rd.classList.add('on');return;}
+  const r=graph.bfs(id,"epstein");
+  if(!r){rd.innerHTML='<div class="rc"><div class="rh"><div class="rn ci">∞</div><div class="rs">No path found in database</div></div></div>';rd.classList.add('on');return;}
+  const cc='c'+Math.min(r.degree,4);
+  let ph='';
+  r.path.forEach((nid,i)=>{
+    const nd=N[nid];const dc=i===0?'s0':i===r.path.length-1?'s0':'s2';
+    ph+=`<div class="cn"><div class="cd ${dc}"></div><div><div class="cm">${nd.n}</div><div class="cx">${nd.d}</div></div></div>`;
+    if(i<r.edges.length){const e=r.edges[i];ph+=`<div class="ce"><div class="cl" data-t="${e.type}">↕ ${e.label} <span style="opacity:.5">(${e.type})</span></div></div>`;}
+  });
+  rd.innerHTML=`<div class="rc"><div class="rh"><div class="rn ${cc}">${r.degree}</div><div class="rs"><strong>${N[id].n}</strong> has an Epstein number of <strong>${r.degree}</strong></div></div><div class="rp">${ph}</div></div>`;
+  rd.classList.add('on');
+}
+document.getElementById('go').addEventListener('click',calc);
+
+// ========================================================================
+// TABS
+// ========================================================================
+document.querySelectorAll('.tab').forEach(t=>{t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.tc').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on');document.getElementById('tab-'+t.dataset.t).classList.add('on');
+});});
+
+// ========================================================================
+// BROWSE
+// ========================================================================
+const cats=[...new Set(Object.values(N).map(n=>n.c))].sort();
+document.getElementById('bfilt').innerHTML='<button class="fb on" data-c="all">All</button>'+cats.map(c=>`<button class="fb" data-c="${c}">${c}</button>`).join('');
+function renderB(cat){
+  const grid=document.getElementById('bgrid');
+  const entries=Object.entries(N).filter(([,v])=>cat==='all'||v.c===cat).map(([id,v])=>({id,...v,en:graph.en(id)})).sort((a,b)=>a.en-b.en);
+  grid.innerHTML=entries.map(e=>`<div class="bi" data-id="${e.id}"><span>${e.n}</span><span style="color:var(--td)">EN: ${e.en===Infinity?'∞':e.en}</span></div>`).join('');
+  grid.querySelectorAll('.bi').forEach(el=>{el.addEventListener('click',()=>{inp.value=N[el.dataset.id].n;selId=el.dataset.id;calc();window.scrollTo({top:0,behavior:'smooth'});});});
+}
+document.getElementById('bfilt').querySelectorAll('.fb').forEach(b=>{b.addEventListener('click',()=>{
+  document.getElementById('bfilt').querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderB(b.dataset.c);
+});});
+renderB('all');
+
+// ========================================================================
+// GRAPH VISUALIZATION
+// ========================================================================
+const cv=document.getElementById('cv'),cx=cv.getContext('2d');
+let gNodes=[],gEdges=[],ox=0,oy=0,sc=1,dragging=false,ds={x:0,y:0},hn=null,alpha=1;
+const catC={'inner-circle':'#dc2626',legal:'#f97316',politics:'#3b82f6',royalty:'#eab308',business:'#06b6d4',finance:'#06b6d4',entertainment:'#a855f7',science:'#22c55e',media:'#ec4899',institution:'#6b7280',family:'#f97316'};
+function initGraph(){
+  const w=cv.clientWidth,h=cv.clientHeight;
+  gNodes=Object.entries(N).map(([id,v],i)=>{
+    const a=(i/Object.keys(N).length)*Math.PI*2,en=graph.en(id),r=id==='epstein'?0:(en*45+Math.random()*50);
+    return{id,...v,x:w/2+Math.cos(a)*r+(Math.random()-.5)*30,y:h/2+Math.sin(a)*r+(Math.random()-.5)*30,vx:0,vy:0,radius:id==='epstein'?10:(v.c==='inner-circle'?6:(en<=1?4:3)),en};
+  });
+  const nm={};gNodes.forEach(n=>nm[n.id]=n);
+  gEdges=E.map(([a,b,t])=>nm[a]&&nm[b]?{source:nm[a],target:nm[b],type:t}:null).filter(Boolean);
+}
+function resizeCV(){const d=window.devicePixelRatio||1,r=cv.getBoundingClientRect();cv.width=r.width*d;cv.height=r.height*d;cx.setTransform(d,0,0,d,0,0);}
+function sim(){
+  if(alpha<.001)return;alpha*=.992;
+  const w=cv.clientWidth/2,h=cv.clientHeight/2;
+  gNodes.forEach(n=>{n.vx+=(w-n.x)*.0002;n.vy+=(h-n.y)*.0002;});
+  for(let i=0;i<gNodes.length;i++)for(let j=i+1;j<gNodes.length;j++){
+    const a=gNodes[i],b=gNodes[j];let dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy)||1,f=250/(d*d);
+    a.vx-=(dx/d)*f;a.vy-=(dy/d)*f;b.vx+=(dx/d)*f;b.vy+=(dy/d)*f;
+  }
+  gEdges.forEach(e=>{const dx=e.target.x-e.source.x,dy=e.target.y-e.source.y,d=Math.sqrt(dx*dx+dy*dy)||1,f=(d-70)*.003;
+    e.source.vx+=(dx/d)*f;e.source.vy+=(dy/d)*f;e.target.vx-=(dx/d)*f;e.target.vy-=(dy/d)*f;});
+  gNodes.forEach(n=>{n.vx*=.85;n.vy*=.85;n.x+=n.vx*alpha;n.y+=n.vy*alpha;});
+}
+function draw(){
+  cx.clearRect(0,0,cv.width,cv.height);cx.save();cx.translate(ox,oy);cx.scale(sc,sc);
+  gEdges.forEach(e=>{cx.beginPath();cx.moveTo(e.source.x,e.source.y);cx.lineTo(e.target.x,e.target.y);cx.strokeStyle='rgba(100,100,140,0.06)';cx.lineWidth=.4;cx.stroke();});
+  gNodes.forEach(n=>{cx.beginPath();cx.arc(n.x,n.y,n.radius,0,Math.PI*2);cx.fillStyle=catC[n.c]||'#4a90d9';if(n===hn){cx.shadowColor=catC[n.c];cx.shadowBlur=10;}cx.fill();cx.shadowBlur=0;
+    if(sc>.4||n.id==='epstein'||n===hn){cx.font=`${n.id==='epstein'?'600 8px':'400 6px'} "IBM Plex Mono",monospace`;cx.fillStyle='rgba(200,200,224,.6)';cx.textAlign='center';cx.fillText(n.n,n.x,n.y+n.radius+8);}});
+  cx.restore();
+}
+function getNodeAt(mx,my){const wx=(mx-ox)/sc,wy=(my-oy)/sc;for(let i=gNodes.length-1;i>=0;i--){const n=gNodes[i],dx=wx-n.x,dy=wy-n.y;if(dx*dx+dy*dy<(n.radius+4)*(n.radius+4))return n;}return null;}
+cv.addEventListener('wheel',e=>{e.preventDefault();const r=cv.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,z=e.deltaY<0?1.08:.92,ns=Math.max(.1,Math.min(6,sc*z));ox=mx-(mx-ox)*(ns/sc);oy=my-(my-oy)*(ns/sc);sc=ns;},{passive:false});
+cv.addEventListener('mousedown',e=>{const r=cv.getBoundingClientRect(),nd=getNodeAt(e.clientX-r.left,e.clientY-r.top);if(nd){inp.value=nd.n;selId=nd.id;calc();}else{dragging=true;ds={x:e.clientX-ox,y:e.clientY-oy};}});
+cv.addEventListener('mousemove',e=>{if(dragging){ox=e.clientX-ds.x;oy=e.clientY-ds.y;return;}const r=cv.getBoundingClientRect(),nd=getNodeAt(e.clientX-r.left,e.clientY-r.top);hn=nd;cv.style.cursor=nd?'pointer':'grab';const tip=document.getElementById('tip');if(nd){tip.style.display='block';tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';tip.innerHTML=`<b>${nd.n}</b><br><span style="color:var(--td)">${nd.d}</span><br>EN: ${nd.en}`;}else tip.style.display='none';});
+cv.addEventListener('mouseup',()=>dragging=false);
+cv.addEventListener('mouseleave',()=>{dragging=false;document.getElementById('tip').style.display='none';});
+function anim(){sim();draw();requestAnimationFrame(anim);}
+initGraph();resizeCV();window.addEventListener('resize',resizeCV);anim();
+</script></body></html>
