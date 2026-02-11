@@ -2354,6 +2354,841 @@ E.push(["simu","downey","social","Marvel"]);
 E.push(["timothy-o","tarantino","social","Film industry"]);
 E.push(["latto","cardi","social","Rap"]);
 E.push(["millie","scarjo","social","Film industry"]);
+
+// ============================================================
+// 4TH DEGREE EXPANSION - CHUNK 1: FROM EN=3 ENTERTAINERS (Actors)
+// ============================================================
+
+// --- NEW NODES ---
+N["austin-b"]={n:"Austin Butler",d:"Actor",c:"entertainment"};
+N["glen-p"]={n:"Glen Powell",d:"Actor",c:"entertainment"};
+N["barry-k"]={n:"Barry Keoghan",d:"Actor",c:"entertainment"};
+N["paul-m"]={n:"Paul Mescal",d:"Actor",c:"entertainment"};
+N["jacob"]={n:"Jacob Elordi",d:"Actor",c:"entertainment"};
+N["jharrel"]={n:"Jharrel Jerome",d:"Actor",c:"entertainment"};
+N["lakeith"]={n:"LaKeith Stanfield",d:"Actor",c:"entertainment"};
+N["keke"]={n:"Keke Palmer",d:"Actress",c:"entertainment"};
+N["joey-king"]={n:"Joey King",d:"Actress",c:"entertainment"};
+N["rachel-z"]={n:"Rachel Zegler",d:"Actress",c:"entertainment"};
+N["devery"]={n:"Devery Jacobs",d:"Actress",c:"entertainment"};
+N["jonathan-m"]={n:"Jonathan Majors",d:"Actor",c:"entertainment"};
+N["michael-bj"]={n:"Michael B. Jordan",d:"Actor",c:"entertainment"};
+N["daniel-k"]={n:"Daniel Kaluuya",d:"Actor",c:"entertainment"};
+N["letitia"]={n:"Letitia Wright",d:"Actress",c:"entertainment"};
+N["hailee"]={n:"Hailee Steinfeld",d:"Actress",c:"entertainment"};
+N["rachel-mc"]={n:"Rachel McAdams",d:"Actress",c:"entertainment"};
+N["emily-b"]={n:"Emily Blunt",d:"Actress",c:"entertainment"};
+N["matt-mc"]={n:"Matthew McConaughey",d:"Actor",c:"entertainment"};
+N["jeff-b"]={n:"Jeff Bridges",d:"Actor",c:"entertainment"};
+N["rami"]={n:"Rami Malek",d:"Actor",c:"entertainment"};
+N["andrew-g"]={n:"Andrew Garfield",d:"Actor",c:"entertainment"};
+N["dakota"]={n:"Dakota Johnson",d:"Actress",c:"entertainment"};
+N["jason-s"]={n:"Jason Sudeikis",d:"Actor",c:"entertainment"};
+N["kate-b"]={n:"Kate Beckinsale",d:"Actress",c:"entertainment"};
+N["mads"]={n:"Mads Mikkelsen",d:"Actor",c:"entertainment"};
+N["benedict"]={n:"Benedict Cumberbatch",d:"Actor",c:"entertainment"};
+N["cillian"]={n:"Cillian Murphy",d:"Actor",c:"entertainment"};
+
+// --- EDGES from EN=3 actors ---
+// Pedro Pascal (EN=3)
+E.push(["pedro","greta","social","Film industry"]);
+E.push(["pedro","paul-m","social","Film industry"]);
+
+// Keanu (EN=3)
+E.push(["keanu","ryan-r","social","Film industry"]);
+E.push(["keanu","hemsworth","social","Action stars"]);
+
+// Tom Holland (EN=3)
+E.push(["tom-holland","andrew-g","business","Spider-Man: No Way Home"]);
+E.push(["tom-holland","benedict","business","Marvel"]);
+
+// Ryan Reynolds (EN=3)
+E.push(["ryan-r","evans","social","Free Guy, close friends"]);
+E.push(["ryan-r","glen-p","social","Film industry"]);
+
+// Hemsworth (EN=3)
+E.push(["hemsworth","cillian","social","Film industry"]);
+
+// Evans (EN=3)
+E.push(["evans","michael-bj","social","Film industry"]);
+E.push(["evans","emily-b","social","Film industry"]);
+
+// Pratt (EN=3)
+E.push(["pratt","emily-b","social","Film industry"]);
+
+// Florence Pugh (EN=3)
+E.push(["florence","andrew-g","social","Film industry"]);
+E.push(["florence","paul-m","social","Film industry"]);
+E.push(["florence","barry-k","social","Film industry"]);
+
+// Greta Gerwig (EN=3)
+E.push(["greta","emily-b","social","Film industry"]);
+E.push(["greta","rachel-mc","social","Film industry"]);
+
+// Oscar Isaac (EN=3)
+E.push(["oscar-isaac","andrew-g","social","Film industry, friends"]);
+E.push(["oscar-isaac","mads","social","Film industry"]);
+
+// Denis Villeneuve (EN=3)
+E.push(["villeneuve","austin-b","business","Dune"]);
+E.push(["villeneuve","benedict","social","Film industry"]);
+E.push(["villeneuve","emily-b","social","Film industry"]);
+
+// Adam Driver (EN=3)
+E.push(["driver-a","greta","business","Film collaborations"]);
+E.push(["driver-a","daisy","business","Star Wars"]);
+E.push(["driver-a","benedict","social","Film industry"]);
+
+// Viola Davis (EN=3)
+E.push(["viola","lupita","social","Film industry"]);
+E.push(["viola","michael-bj","social","Film industry"]);
+E.push(["viola","daniel-k","social","Film industry"]);
+
+// Dwayne Johnson (EN=3)
+E.push(["dwayne","hemsworth","social","Action stars"]);
+E.push(["dwayne","ryan-r","social","Action comedy"]);
+E.push(["dwayne","momoa","social","Action stars"]);
+
+// Cruise (EN=3)
+E.push(["cruise","emily-b","business","Edge of Tomorrow"]);
+E.push(["cruise","glen-p","business","Top Gun: Maverick"]);
+E.push(["cruise","rami","business","Mission Impossible"]);
+
+// Jennifer Aniston (EN=3)
+E.push(["aniston","rachel-mc","social","Film industry"]);
+E.push(["aniston","jason-s","social","Film industry"]);
+
+// Chalamet (EN=3) already connected to many
+E.push(["chalamet","austin-b","social","Acting peers/friends"]);
+
+// Zendaya (EN=3)
+E.push(["zendaya","jacob","social","Euphoria"]);
+E.push(["zendaya","hailee","social","Film industry"]);
+E.push(["zendaya","austin-b","social","Film industry"]);
+
+// Chris Pine (EN=3)
+E.push(["chris-p","glen-p","social","Film industry"]);
+
+// Momoa (EN=3)
+E.push(["momoa","matt-mc","social","Film industry"]);
+
+// Nolan connections (EN=2 -> creates EN=3)
+E.push(["nolan","cillian","business","Oppenheimer, Peaky"]);
+E.push(["nolan","emily-b","business","Oppenheimer"]);
+E.push(["nolan","matt-mc","business","Interstellar"]);
+E.push(["nolan","rami","social","Film industry"]);
+
+// Michael B. Jordan
+E.push(["michael-bj","daniel-k","social","Film industry"]);
+E.push(["michael-bj","jonathan-m","social","Creed"]);
+E.push(["michael-bj","jordan-p","business","Film collaborations"]);
+E.push(["michael-bj","chadwick","business","Black Panther"]);
+
+// Daniel Kaluuya
+E.push(["daniel-k","jordan-p","business","Get Out"]);
+E.push(["daniel-k","letitia","business","Black Panther"]);
+E.push(["daniel-k","lupita","business","Black Panther"]);
+
+// Letitia Wright
+E.push(["letitia","chadwick","business","Black Panther"]);
+E.push(["letitia","lupita","business","Black Panther"]);
+
+// Benedict Cumberbatch
+E.push(["benedict","andrew-g","social","Film industry"]);
+E.push(["benedict","mads","business","Doctor Strange"]);
+
+// Cillian Murphy
+E.push(["cillian","florence","business","Oppenheimer"]);
+E.push(["cillian","emily-b","business","Oppenheimer"]);
+E.push(["cillian","matt-mc","business","Film industry"]);
+
+// Emily Blunt
+E.push(["emily-b","matt-mc","social","Film industry"]);
+E.push(["emily-b","rachel-mc","social","Film industry"]);
+
+// Rami Malek
+E.push(["rami","daniel-k","social","Film industry"]);
+
+// Andrew Garfield
+E.push(["andrew-g","hailee","social","Film industry"]);
+
+// Austin Butler
+E.push(["austin-b","glen-p","social","Hollywood"]);
+E.push(["austin-b","barry-k","social","Film industry"]);
+
+// Glen Powell
+E.push(["glen-p","sydney","social","Film industry"]);
+
+
+// ============================================================
+// 4TH DEGREE EXPANSION - CHUNK 2: MUSIC, SPORTS, COMEDY, POLITICS
+// ============================================================
+
+// --- NEW MUSIC NODES ---
+N["charli"]={n:"Charli XCX",d:"Singer",c:"entertainment"};
+N["chappell"]={n:"Chappell Roan",d:"Singer",c:"entertainment"};
+N["tyla"]={n:"Tyla",d:"Singer",c:"entertainment"};
+N["fka"]={n:"FKA Twigs",d:"Singer",c:"entertainment"};
+N["rosalia"]={n:"Rosalía",d:"Singer",c:"entertainment"};
+N["karol"]={n:"Karol G",d:"Singer",c:"entertainment"};
+N["future"]={n:"Future",d:"Rapper",c:"entertainment"};
+N["young-thug"]={n:"Young Thug",d:"Rapper",c:"entertainment"};
+N["asap"]={n:"A$AP Rocky",d:"Rapper",c:"entertainment"};
+N["childish"]={n:"Childish Gambino",d:"Rapper/actor",c:"entertainment"};
+N["lil-baby"]={n:"Lil Baby",d:"Rapper",c:"entertainment"};
+N["jack-h"]={n:"Jack Harlow",d:"Rapper",c:"entertainment"};
+N["bts-rm"]={n:"RM (BTS)",d:"K-pop artist",c:"entertainment"};
+N["blackpink"]={n:"BLACKPINK",d:"K-pop group",c:"entertainment"};
+N["hozier"]={n:"Hozier",d:"Singer",c:"entertainment"};
+N["doechii"]={n:"Doechii",d:"Rapper",c:"entertainment"};
+N["gracie"]={n:"Gracie Abrams",d:"Singer",c:"entertainment"};
+N["phoebe"]={n:"Phoebe Bridgers",d:"Singer",c:"entertainment"};
+
+// --- NEW SPORTS NODES ---
+N["ohtani"]={n:"Shohei Ohtani",d:"MLB star",c:"entertainment"};
+N["tyson"]={n:"Mike Tyson",d:"Boxing legend",c:"entertainment"};
+N["ant"]={n:"Anthony Edwards",d:"NBA player",c:"entertainment"};
+N["jokic"]={n:"Nikola Jokić",d:"NBA MVP",c:"entertainment"};
+N["morant"]={n:"Ja Morant",d:"NBA player",c:"entertainment"};
+N["lamine"]={n:"Lamine Yamal",d:"Soccer prodigy",c:"entertainment"};
+N["vinicius"]={n:"Vinícius Jr.",d:"Soccer star",c:"entertainment"};
+N["coco"]={n:"Coco Gauff",d:"Tennis star",c:"entertainment"};
+N["salah"]={n:"Mohamed Salah",d:"Soccer star",c:"entertainment"};
+N["josh-allen"]={n:"Josh Allen",d:"NFL quarterback",c:"entertainment"};
+
+// --- NEW COMEDY/TV NODES ---
+N["matt-rife"]={n:"Matt Rife",d:"Comedian",c:"entertainment"};
+N["nate-b"]={n:"Nate Bargatze",d:"Comedian",c:"entertainment"};
+N["nikki-g"]={n:"Nikki Glaser",d:"Comedian",c:"entertainment"};
+N["shane"]={n:"Shane Gillis",d:"Comedian",c:"entertainment"};
+N["theo"]={n:"Theo Von",d:"Comedian/podcaster",c:"entertainment"};
+N["mark-n"]={n:"Mark Normand",d:"Comedian",c:"entertainment"};
+N["bert"]={n:"Bert Kreischer",d:"Comedian",c:"entertainment"};
+N["bobby-lee"]={n:"Bobby Lee",d:"Comedian",c:"entertainment"};
+N["sam-m"]={n:"Sam Morril",d:"Comedian",c:"entertainment"};
+
+// --- NEW POLITICS NODES ---
+N["shapiro"]={n:"Josh Shapiro",d:"PA Governor",c:"politics"};
+N["hochul"]={n:"Kathy Hochul",d:"NY Governor",c:"politics"};
+N["pritzker-jb"]={n:"JB Pritzker",d:"IL Governor",c:"politics"};
+N["lake"]={n:"Kari Lake",d:"Senator",c:"politics"};
+N["boebert"]={n:"Lauren Boebert",d:"Congresswoman",c:"politics"};
+N["mtg"]={n:"Marjorie Taylor Greene",d:"Congresswoman",c:"politics"};
+N["crenshaw"]={n:"Dan Crenshaw",d:"Congressman",c:"politics"};
+N["luna"]={n:"Anna Paulina Luna",d:"Congresswoman, criticized Epstein release",c:"politics"};
+
+// === EDGES FROM EN=3 MUSICIANS ===
+
+// Drake (EN=3)
+E.push(["drake","future","business","What a Time to Be Alive"]);
+E.push(["drake","young-thug","social","Rap"]);
+E.push(["drake","jack-h","social","Music"]);
+E.push(["drake","lil-baby","business","Collab"]);
+E.push(["drake","asap","social","Rap"]);
+
+// Kendrick (EN=3)
+E.push(["kendrick","childish","social","Rap"]);
+E.push(["kendrick","future","social","Rap"]);
+E.push(["kendrick","asap","social","Rap"]);
+
+// Nicki (EN=3)
+E.push(["nicki","future","social","Rap"]);
+E.push(["nicki","young-thug","social","Rap"]);
+
+// Travis Scott (EN=3)
+E.push(["travis","future","business","Collaborations"]);
+E.push(["travis","young-thug","social","Rap"]);
+E.push(["travis","asap","social","Rap"]);
+
+// Dua Lipa (EN=3)
+E.push(["dua","charli","social","Pop music"]);
+E.push(["dua","rosalia","social","Music"]);
+E.push(["dua","fka","social","Music"]);
+E.push(["dua","hozier","social","Music"]);
+
+// SZA (EN=3)
+E.push(["sza","phoebe","social","Music"]);
+E.push(["sza","doechii","business","TDE labelmates"]);
+
+// Cardi B (EN=3)
+E.push(["cardi","future","social","Rap"]);
+E.push(["cardi","karol","social","Latin music"]);
+
+// Bad Bunny (EN=3)
+E.push(["bad-bunny","rosalia","business","Latin music collab"]);
+E.push(["bad-bunny","karol","social","Latin music"]);
+
+// Megan (EN=3)
+E.push(["megan","doechii","social","Rap"]);
+E.push(["megan","latto","social","Rap"]);
+
+// Ed Sheeran (EN=3)
+E.push(["ed-sheeran","hozier","social","Music"]);
+
+// Miley (EN=3)
+E.push(["miley","charli","social","Pop"]);
+E.push(["miley","phoebe","social","Music"]);
+
+// Selena Gomez (EN=3)
+E.push(["selena-g","charli","social","Music"]);
+
+// Ariana Grande (EN=3)
+E.push(["ariana","charli","social","Pop music"]);
+E.push(["ariana","chappell","social","Music industry"]);
+
+// Lady Gaga (EN=3)
+E.push(["gaga","charli","social","Pop music"]);
+E.push(["gaga","rosalia","social","Music"]);
+
+// Lana Del Rey (EN=3)
+E.push(["lana","phoebe","social","Music"]);
+
+// Taylor Swift (EN=3) -> already connects to sabrina, ice-spice, olivia
+E.push(["swift","charli","social","Music"]);
+E.push(["swift","gracie","social","Tour opener"]);
+E.push(["swift","chappell","social","Music industry"]);
+E.push(["swift","phoebe","social","Music"]);
+
+// A$AP Rocky
+E.push(["asap","rihanna","family","Couple"]);
+E.push(["asap","tyler","social","Rap"]);
+
+// Childish Gambino
+
+// === EDGES FROM EN=3 SPORTS ===
+
+// LeBron (EN=3)
+E.push(["lebron","ant","social","NBA"]);
+E.push(["lebron","jokic","social","NBA"]);
+E.push(["lebron","ohtani","social","LA sports"]);
+
+// Serena (EN=3)
+E.push(["serena","coco","social","Tennis mentorship"]);
+
+// Messi (EN=3)
+E.push(["messi","vinicius","social","Football"]);
+E.push(["messi","lamine","social","Barcelona"]);
+E.push(["messi","salah","social","Football"]);
+
+// Ronaldo (EN=3 through MBS)
+E.push(["ronaldo","salah","social","Football"]);
+E.push(["ronaldo","vinicius","social","Real Madrid"]);
+
+// Mbappe (EN=3)
+E.push(["mbappe","vinicius","business","Real Madrid teammates"]);
+E.push(["mbappe","haaland","business","Football rivals"]);
+E.push(["mbappe","neymar","business","PSG"]);
+
+// Hamilton (EN=2!)
+E.push(["hamilton","max-v","business","F1 rivals"]);
+
+// McGregor (EN=3)
+E.push(["mcgregor","tyson","social","Combat sports"]);
+
+// Mahomes (EN=3)
+E.push(["mahomes","josh-allen","business","NFL rivals"]);
+
+// Kelce (EN=3)
+E.push(["kelce","josh-allen","social","NFL"]);
+
+// Federer (EN=3)
+E.push(["federer","coco","social","Tennis"]);
+
+// Tiger (EN=3)
+E.push(["tiger","ohtani","social","Sports icons"]);
+
+// === EDGES FROM EN=3 COMEDY ===
+
+// Chappelle (EN=3)
+E.push(["chappelle","theo","social","Comedy"]);
+E.push(["chappelle","shane","social","Comedy"]);
+E.push(["chappelle","nate-b","social","Comedy"]);
+
+// Rock (EN=3)
+E.push(["rock","nikki-g","social","Comedy"]);
+E.push(["rock","nate-b","social","Comedy"]);
+
+// Hart (EN=3)
+E.push(["hart","nate-b","social","Comedy"]);
+E.push(["hart","matt-rife","social","Comedy"]);
+
+// Rogan (EN=2) - big comedy connector
+E.push(["rogan","theo","social","Podcast, close friends"]);
+E.push(["rogan","shane","social","Comedy/podcast"]);
+E.push(["rogan","bert","social","Comedy, close friends"]);
+E.push(["rogan","bobby-lee","social","Comedy/podcast"]);
+E.push(["rogan","mark-n","social","Comedy"]);
+E.push(["rogan","nate-b","social","Comedy/podcast"]);
+E.push(["rogan","nikki-g","social","Comedy"]);
+
+// Colbert (EN=3)
+E.push(["colbert","nate-b","social","TV appearance"]);
+
+// Mulaney (EN=3)
+E.push(["mulaney","nikki-g","social","Comedy"]);
+E.push(["mulaney","nate-b","social","Comedy"]);
+
+// Theo Von
+E.push(["theo","shane","social","Comedy"]);
+E.push(["theo","bert","social","Comedy"]);
+E.push(["theo","bobby-lee","social","Comedy"]);
+E.push(["theo","mark-n","social","Comedy"]);
+E.push(["theo","trump","social","Podcast interview"]);
+
+// Shane Gillis
+E.push(["shane","mark-n","social","Comedy, close friends"]);
+E.push(["shane","matt-rife","social","Comedy"]);
+E.push(["shane","nate-b","social","Comedy"]);
+
+// === EDGES FROM EN=3 POLITICS ===
+
+// Harris (EN=3)
+E.push(["harris","shapiro","political","VP selection finalist"]);
+E.push(["harris","hochul","political","Democrats"]);
+E.push(["harris","pritzker-jb","political","Democrats"]);
+
+// AOC (EN=3)
+E.push(["aoc","boebert","political","House, feud"]);
+E.push(["aoc","mtg","political","House, feud"]);
+E.push(["aoc","fetterman","political","Progressive"]);
+
+// Gaetz (EN=3)
+E.push(["gaetz","mtg","political","MAGA allies"]);
+E.push(["gaetz","boebert","political","House Republicans"]);
+E.push(["gaetz","lake","political","MAGA"]);
+E.push(["gaetz","luna","political","House Republicans"]);
+
+// Boris Johnson (EN=3)
+E.push(["johnson-b","erdogan","political","NATO"]);
+
+// Walz (EN=3)
+E.push(["walz","shapiro","political","Democratic governors"]);
+E.push(["walz","whitmer","political","Midwest governors"]);
+
+// Buttigieg (EN=3)
+E.push(["buttigieg","shapiro","political","Democrats"]);
+
+// DeSantis (EN=2 -> creates EN=3)
+E.push(["desantis","lake","political","Republican"]);
+E.push(["desantis","boebert","political","Republican"]);
+
+// Trump (EN=1) -> more MAGA
+E.push(["trump","mtg","political","MAGA ally"]);
+E.push(["trump","boebert","political","Republican"]);
+E.push(["trump","lake","political","Endorsed"]);
+E.push(["trump","luna","political","Republican"]);
+E.push(["trump","theo","social","Podcast interview"]);
+
+// McConnell (EN=2)
+E.push(["mcconnell","crenshaw","political","Republican"]);
+
+// Cross-connections between new nodes
+E.push(["mtg","boebert","political","House Republicans"]);
+E.push(["mtg","luna","political","House Republicans"]);
+E.push(["shapiro","hochul","political","Northeast governors"]);
+E.push(["shapiro","pritzker-jb","political","Democratic governors"]);
+E.push(["hochul","pritzker-jb","political","Democratic governors"]);
+
+// Fix orphan nodes
+E.push(["jharrel","daniel-k","social","Film industry"]);
+E.push(["lakeith","daniel-k","social","Film industry, Get Out"]);
+E.push(["keke","jordan-p","business","Nope"]);
+E.push(["joey-king","florence","social","Actresses"]);
+E.push(["rachel-z","spielberg","business","West Side Story"]);
+E.push(["devery","pedro","social","Film industry"]);
+E.push(["jeff-b","pitt","social","Film industry"]);
+E.push(["dakota","pedro","social","Film industry"]);
+E.push(["kate-b","grant","social","British actors"]);
+E.push(["tyla","beyonce","social","Music"]);
+E.push(["bts-rm","blackpink","social","K-pop"]);
+E.push(["bts-rm","ed-sheeran","social","Music collaboration"]);
+E.push(["blackpink","selena-g","business","Music collab: Ice Cream"]);
+E.push(["morant","lebron","social","NBA"]);
+E.push(["sam-m","mark-n","social","Comedy, close friends"]);
+
+// ============================================================
+// 4TH DEGREE EXPANSION - CHUNK 3: Connect low-connection EN=3 nodes
+// to NEW people, creating denser EN=4 web
+// ============================================================
+
+// --- NEW NODES ---
+N["lilyrose"]={n:"Lily-Rose Depp",d:"Actress",c:"entertainment"};
+N["jameela"]={n:"Jameela Jamil",d:"Actress",c:"entertainment"};
+N["nick-j"]={n:"Nick Jonas",d:"Singer/actor",c:"entertainment"};
+N["darius"]={n:"Darius Garland",d:"NBA player",c:"entertainment"};
+N["devin"]={n:"Devin Booker",d:"NBA player",c:"entertainment"};
+N["luka"]={n:"Luka Dončić",d:"NBA player",c:"entertainment"};
+N["saquon"]={n:"Saquon Barkley",d:"NFL running back",c:"entertainment"};
+N["wemby"]={n:"Victor Wembanyama",d:"NBA player",c:"entertainment"};
+N["alcaraz"]={n:"Carlos Alcaraz",d:"Tennis star",c:"entertainment"};
+N["verstappen-p"]={n:"Jos Verstappen",d:"Former F1 driver",c:"entertainment"};
+N["george-r"]={n:"George Russell",d:"F1 driver",c:"entertainment"};
+N["norris"]={n:"Lando Norris",d:"F1 driver",c:"entertainment"};
+N["leclerc"]={n:"Charles Leclerc",d:"F1 driver",c:"entertainment"};
+N["bellingham"]={n:"Jude Bellingham",d:"Soccer star",c:"entertainment"};
+N["palmer-c"]={n:"Cole Palmer",d:"Soccer star",c:"entertainment"};
+N["saka"]={n:"Bukayo Saka",d:"Soccer star",c:"entertainment"};
+N["de-bruyne"]={n:"Kevin De Bruyne",d:"Soccer star",c:"entertainment"};
+N["pedri"]={n:"Pedri",d:"Soccer star",c:"entertainment"};
+N["rashford"]={n:"Marcus Rashford",d:"Soccer star",c:"entertainment"};
+N["son"]={n:"Son Heung-min",d:"Soccer star",c:"entertainment"};
+N["szoboszlai"]={n:"Dominik Szoboszlai",d:"Soccer star",c:"entertainment"};
+N["rachel-brosnahan"]={n:"Rachel Brosnahan",d:"Actress",c:"entertainment"};
+N["ncuti"]={n:"Ncuti Gatwa",d:"Actor",c:"entertainment"};
+N["ke"]={n:"Ke Huy Quan",d:"Actor",c:"entertainment"};
+N["michelle-y"]={n:"Michelle Yeoh",d:"Actress",c:"entertainment"};
+N["brendan-f"]={n:"Brendan Fraser",d:"Actor",c:"entertainment"};
+N["jeff-g"]={n:"Jeff Goldblum",d:"Actor",c:"entertainment"};
+N["sam-r"]={n:"Sam Rockwell",d:"Actor",c:"entertainment"};
+N["daddario"]={n:"Alexandra Daddario",d:"Actress",c:"entertainment"};
+N["margulies"]={n:"Julianna Margulies",d:"Actress",c:"entertainment"};
+N["yang"]={n:"Andrew Yang",d:"Politician",c:"politics"};
+N["jasmine"]={n:"Jasmine Crockett",d:"Congresswoman",c:"politics"};
+N["lieu"]={n:"Ted Lieu",d:"Congressman",c:"politics"};
+
+// --- EDGES: Expand weakly-connected EN=3 nodes ---
+
+// Steve Wozniak (EN=3, 1 conn)
+E.push(["woz","altman","social","Tech"]);
+E.push(["woz","rogan","social","Podcast guest"]);
+
+// Ray Dalio (EN=3, 1 conn)
+E.push(["dalio","larry-fink","social","Finance"]);
+E.push(["dalio","dimon","social","Finance leaders"]);
+
+// Sissy Spacek (EN=3, 1 conn)
+E.push(["spacek","sarandon","social","Actress legends"]);
+E.push(["spacek","keaton","social","Actress legends"]);
+
+// Jason Bateman (EN=3, 1 conn)
+E.push(["bateman","aniston","business","Film industry"]);
+E.push(["bateman","jason-s","social","Comedy"]);
+
+// Olaf Scholz (EN=3, 1 conn)
+E.push(["scholz","macron","political","EU leaders"]);
+E.push(["scholz","johnson-b","political","G7"]);
+
+// Jenna Ortega (EN=3, 1 conn)
+E.push(["jenna","millie","social","Gen Z actresses"]);
+E.push(["jenna","selena-g","social","Film industry"]);
+
+// Channing Tatum (EN=3, 1 conn)
+E.push(["channing","dwayne","social","Action/comedy"]);
+E.push(["channing","bullock","business","The Lost City"]);
+E.push(["channing","ryan-r","social","Hollywood"]);
+
+// Awkwafina (EN=3, 1 conn)
+E.push(["awkwafina","ke","business","Film industry"]);
+E.push(["awkwafina","michelle-y","social","Film industry"]);
+E.push(["awkwafina","simu","business","Marvel"]);
+
+// Simu Liu (EN=3, 1 conn)
+E.push(["simu","tom-holland","social","Marvel"]);
+E.push(["simu","benedict","social","Marvel"]);
+
+// Timothy Olyphant (EN=3, 1 conn)
+E.push(["timothy-o","pedro","social","TV"]);
+
+// Barry Jenkins (EN=3, 1 conn)
+E.push(["barry-j","viola","social","Film industry"]);
+E.push(["barry-j","lupita","social","Film industry"]);
+E.push(["barry-j","jordan-p","social","Director peers"]);
+
+// Millie Bobby Brown (EN=3, 1 conn)
+E.push(["millie","tom-holland","social","Young actors"]);
+E.push(["millie","zendaya","social","Gen Z actresses"]);
+
+// Lamar Jackson (EN=3, 1 conn)
+E.push(["lamar-j","mahomes","social","NFL MVPs"]);
+E.push(["lamar-j","josh-allen","social","NFL QBs"]);
+
+// Rachel Zegler (EN=3, 1 conn)
+E.push(["rachel-z","florence","social","Young actresses"]);
+E.push(["rachel-z","greta","social","Film industry"]);
+
+// Jeff Bridges (EN=3, 1 conn)
+E.push(["jeff-b","damon","social","Film industry"]);
+
+// Kate Beckinsale (EN=3, 1 conn)
+E.push(["kate-b","beckham","social","British celebrity"]);
+E.push(["kate-b","kidman","social","Actresses"]);
+
+// Tyla (EN=3, 1 conn)  
+E.push(["tyla","dua","social","Music industry"]);
+E.push(["tyla","sza","social","Music"]);
+
+// Dan Crenshaw (EN=3, 1 conn)
+E.push(["crenshaw","gaetz","political","House Republicans"]);
+E.push(["crenshaw","vance","political","Republican"]);
+
+// Carl Icahn (EN=3, 2 conn)
+E.push(["icahn","ackman","social","Finance"]);
+E.push(["icahn","mnuchin","social","Finance"]);
+
+// Doja Cat (EN=3, 2 conn)
+E.push(["doja","sza","social","Music"]);
+E.push(["doja","nicki","social","Rap"]);
+E.push(["doja","weeknd","social","Music"]);
+
+// Jony Ive (EN=3, 2 conn)
+E.push(["ive","altman","business","OpenAI hardware"]);
+
+// Christian Bale (EN=3, 2 conn)
+E.push(["bale","matt-mc","social","Film industry"]);
+E.push(["bale","cillian","social","Dark Knight, friends"]);
+
+// Lizzo (EN=3, 2 conn)
+E.push(["lizzo","sza","social","Music"]);
+E.push(["lizzo","beyonce","social","Music"]);
+
+// Rishi Sunak (EN=3, 2 conn)
+E.push(["sunak","biden","political","G7"]);
+E.push(["sunak","modi","political","UK-India"]);
+
+// Anya Taylor-Joy (EN=3, 2 conn)
+E.push(["anya","florence","social","Young actresses"]);
+E.push(["anya","austin-b","social","Film industry"]);
+
+// 21 Savage (EN=3, 2 conn)
+E.push(["21savage","future","social","Atlanta rap"]);
+E.push(["21savage","young-thug","social","Atlanta rap"]);
+E.push(["21savage","lil-baby","social","Atlanta rap"]);
+
+// Victoria Beckham (EN=3, 2 conn)
+E.push(["victoria-b","hamilton","social","British celebrity"]);
+E.push(["victoria-b","wintour","social","Fashion"]);
+
+// Chris Pine (EN=3, 2 conn)
+E.push(["chris-p","hemsworth","social","Star Trek/Hollywood"]);
+E.push(["chris-p","evans","social","Hollywood Chrises"]);
+
+// John Boyega (EN=3, 2 conn)
+E.push(["john-b","daniel-k","social","British actors"]);
+
+// Greg Abbott (EN=3, 2 conn)
+E.push(["abbott","mtg","political","Republican"]);
+E.push(["abbott","lake","political","Border states"]);
+
+// Raphael Warnock (EN=3, 2 conn)
+E.push(["warnock","fetterman","political","Senate class"]);
+
+// Giannis (EN=3, 2 conn)
+E.push(["giannis","lebron","social","NBA"]);
+E.push(["giannis","ant","social","NBA"]);
+E.push(["giannis","luka","social","NBA"]);
+
+// Max Verstappen (EN=3, 2 conn)
+E.push(["max-v","norris","business","F1 rivals/friends"]);
+E.push(["max-v","leclerc","business","F1 rivals"]);
+
+// Erling Haaland (EN=3, 2 conn)
+E.push(["haaland","de-bruyne","business","Man City teammates"]);
+E.push(["haaland","bellingham","social","Football"]);
+
+// Jayson Tatum (EN=3, 2 conn)
+E.push(["tatum","luka","social","NBA"]);
+E.push(["tatum","devin","social","NBA"]);
+
+// Phil Mickelson (EN=3, 2 conn)
+E.push(["mickelson","rogan","social","Golf/podcast"]);
+
+// Hasan Minhaj (EN=3, 2 conn)
+E.push(["hasan","trevor","social","Comedy"]);
+E.push(["hasan","oliver","social","Comedy"]);
+
+// Mohamed Salah (EN=3, 2 conn)
+E.push(["salah","de-bruyne","social","Premier League"]);
+E.push(["salah","son","social","Premier League"]);
+E.push(["salah","bellingham","social","Football"]);
+
+// Bert Kreischer (EN=3, 2 conn)
+E.push(["bert","mark-n","social","Comedy"]);
+E.push(["bert","shane","social","Comedy"]);
+
+// Bobby Lee (EN=3, 2 conn)
+E.push(["bobby-lee","theo","social","Comedy/podcast"]);
+E.push(["bobby-lee","bert","social","Comedy"]);
+
+// Justin Trudeau (EN=3, 3 conn)
+E.push(["trudeau","zelensky","political","Diplomacy"]);
+E.push(["trudeau","johnson-b","political","G7"]);
+
+// Don Lemon (EN=3, 3 conn)
+E.push(["lemon","gayle","social","TV news"]);
+E.push(["lemon","maddow","social","TV news"]);
+
+// Amy Poehler (EN=3, 3 conn)
+E.push(["poehler","seinfeld","social","Comedy"]);
+E.push(["poehler","mulaney","social","Comedy"]);
+
+// John Oliver (EN=3, 3 conn)
+E.push(["oliver","seth-meyers","social","Comedy"]);
+E.push(["oliver","trevor","social","Daily Show alumni"]);
+
+// Jason Momoa (EN=3, 3 conn)
+E.push(["momoa","pratt","social","Action stars"]);
+E.push(["momoa","hemsworth","social","Action stars"]);
+
+// Lana Del Rey (EN=3, 3 conn)
+E.push(["lana","charli","social","Music"]);
+E.push(["lana","ariana","social","Pop"]);
+
+// J. Cole (EN=3, 3 conn)
+E.push(["j-cole","21savage","social","Rap"]);
+E.push(["j-cole","lil-baby","social","Rap"]);
+
+// Tyler the Creator (EN=3, 3 conn)
+E.push(["tyler","childish","social","Rap"]);
+
+// Demi Lovato (EN=3, 3 conn)
+E.push(["demi-l","ariana","social","Pop music"]);
+E.push(["demi-l","nick-j","family","Former relationship"]);
+
+// John Fetterman (EN=3, 3 conn)
+E.push(["fetterman","shapiro","political","Pennsylvania"]);
+
+// Chrissy Teigen (EN=3, 3 conn)
+E.push(["chrissy","selena-g","social","Celebrity"]);
+
+// Rami Malek (EN=3, 3 conn)
+E.push(["rami","andrew-g","social","Film industry"]);
+
+// Vinicius Jr. (EN=3, 3 conn)
+E.push(["vinicius","bellingham","business","Real Madrid"]);
+E.push(["vinicius","mbappe","business","Real Madrid"]);
+
+// Nikki Glaser (EN=3, 3 conn)
+E.push(["nikki-g","matt-rife","social","Comedy"]);
+E.push(["nikki-g","shane","social","Comedy"]);
+
+// LeBron (EN=3, high conn) -> more sports
+E.push(["lebron","luka","social","NBA"]);
+E.push(["lebron","devin","social","NBA"]);
+E.push(["lebron","wemby","social","NBA"]);
+
+// Serena (EN=3)
+E.push(["serena","djokovic","social","Tennis"]);
+E.push(["serena","alcaraz","social","Tennis"]);
+
+// Colbert (EN=3)
+E.push(["colbert","rachel-brosnahan","social","Entertainment"]);
+
+// Smith (EN=3)
+E.push(["smith","michael-bj","social","Film industry"]);
+
+// Cruise (EN=3)
+E.push(["cruise","matt-mc","social","Hollywood"]);
+
+// Jolie (EN=3)
+E.push(["jolie","theron","social","Actresses"]);
+E.push(["jolie","pitt","family","Former couple"]);
+E.push(["jolie","kidman","social","Hollywood"]);
+
+// Swift (EN=3) already very connected
+E.push(["swift","selena-g","social","Best friends"]);
+E.push(["swift","nick-j","social","Music"]);
+
+// Jennifer Lopez (EN=2)
+E.push(["lopez","affleck","family","Former couple"]);
+E.push(["lopez","lilyrose","social","Celebrity"]);
+
+// Nick Jonas
+E.push(["nick-j","pratt","social","Celebrity"]);
+E.push(["nick-j","dwayne","business","Jumanji"]);
+
+// Depp (EN=2)
+E.push(["depp","lilyrose","family","Father-daughter"]);
+
+// Football cross-connections
+E.push(["bellingham","vinicius","business","Real Madrid"]);
+E.push(["bellingham","saka","social","England"]);
+E.push(["bellingham","palmer-c","social","England"]);
+E.push(["bellingham","rashford","social","England"]);
+E.push(["de-bruyne","palmer-c","business","Man City"]);
+E.push(["saka","rashford","social","England"]);
+E.push(["saka","palmer-c","social","England"]);
+E.push(["son","salah","social","Premier League"]);
+E.push(["son","de-bruyne","social","Premier League"]);
+E.push(["lamine","pedri","business","Barcelona teammates"]);
+E.push(["pedri","de-bruyne","social","Football"]);
+E.push(["rashford","de-bruyne","social","Premier League"]);
+E.push(["palmer-c","rashford","social","England"]);
+
+// NBA cross-connections
+E.push(["ant","luka","social","NBA"]);
+E.push(["ant","jokic","social","NBA"]);
+E.push(["ant","morant","social","NBA"]);
+E.push(["luka","jokic","social","NBA"]);
+E.push(["luka","wemby","social","NBA"]);
+E.push(["devin","luka","social","NBA"]);
+
+// F1 cross-connections
+E.push(["norris","leclerc","business","F1 rivals"]);
+E.push(["norris","george-r","social","F1"]);
+E.push(["leclerc","george-r","social","F1"]);
+E.push(["george-r","hamilton","business","Mercedes teammates"]);
+
+// Tennis
+E.push(["alcaraz","djokovic","business","Tennis rivals"]);
+E.push(["alcaraz","coco","social","Tennis"]);
+E.push(["osaka","coco","social","Tennis"]);
+
+// Film cross-connections
+E.push(["ke","michelle-y","business","Everything Everywhere"]);
+E.push(["michelle-y","cillian","social","Film industry"]);
+E.push(["brendan-f","keanu","social","Film industry"]);
+E.push(["brendan-f","rachel-mc","social","Film industry"]);
+E.push(["jeff-g","hemsworth","business","Thor"]);
+E.push(["sam-r","pitt","social","Film industry"]);
+E.push(["andrew-g","florence","social","Film industry"]);
+E.push(["rachel-mc","gosling","business","The Notebook"]);
+E.push(["ncuti","jenna","social","TV"]);
+
+// Johnny Depp (EN=2) to Lily-Rose
+// already added: depp -> lilyrose
+
+// Politics cross-connections
+E.push(["yang","buttigieg","political","2020 primary"]);
+E.push(["jasmine","aoc","political","Progressive"]);
+E.push(["jasmine","fetterman","political","Democrats"]);
+E.push(["lieu","schumer","political","Democrats"]);
+E.push(["lieu","pelosi","political","House Democrats"]);
+
+E.push(["smith","washington","social","Film industry, friends"]);
+
+// Fix orphan nodes
+E.push(["jameela","sacha","social","Couple"]);
+E.push(["darius","giannis","social","NBA"]);
+E.push(["saquon","mahomes","social","NFL"]);
+E.push(["saquon","josh-allen","social","NFL"]);
+E.push(["szoboszlai","salah","business","Liverpool teammates"]);
+E.push(["daddario","dwayne","business","Baywatch"]);
+E.push(["margulies","clooney","business","ER"]);
+
+// Remove bad bridges ref
+// Fix verstappen-p
+E.push(["verstappen-p","max-v","family","Father-son"]);
+E.push(["verstappen-p","ecclestone","social","F1"]);
+
+// Reduce EN=5 to EN=4 by connecting them closer
+// Keke Palmer (EN=5) -> connect to someone at EN=2/3
+E.push(["keke","oprah","social","TV"]);
+// LaKeith Stanfield (EN=5)
+E.push(["lakeith","childish","business","Atlanta TV show"]);
+E.push(["lakeith","jordan-p","business","Get Out"]);
+// Jonathan Majors (EN=5)
+E.push(["jonathan-m","downey","social","Marvel"]);
+// Jharrel Jerome (EN=5)
+E.push(["jharrel","zendaya","social","Young actors"]);
+
+// Reduce EN=5 football players
+// Cole Palmer, Saka, Pedri, Rashford -> connect to EN=2 people
+E.push(["palmer-c","beckham","social","English football"]);
+E.push(["saka","beckham","social","English football"]);
+E.push(["rashford","beckham","social","English football"]);
+E.push(["pedri","messi","business","Barcelona"]);
+
+E.push(["lakeith","clooney","social","Film industry"]);
 // Missing node for harris
 N["harris"]={n:"Kamala Harris",d:"Vice President",c:"politics"};
 
