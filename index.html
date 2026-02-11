@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TEX4K — Free 4K PBR Textures</title>
+<meta name="description" content="Search and download free CC0 4K PBR textures. No watermarks, commercial ready."/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◆</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#08090a;--s1:#111214;--s2:#1a1b1f;--bd:#262830;--tx:#eae8e4;--dm:#6b6d78;--ac:#b8ff00;--a2:#00ffc8}
+body,html{background:var(--bg);color:var(--tx);font-family:'Outfit',sans-serif;min-height:100vh}
+#root{min-height:100vh;background:var(--bg);background-image:radial-gradient(ellipse at 15% 5%,rgba(184,255,0,.04) 0%,transparent 40%),radial-gradient(ellipse at 85% 95%,rgba(0,255,200,.02) 0%,transparent 40%)}
+.w{max-width:1400px;margin:0 auto;padding:0 20px}
+header{padding:40px 0 8px;text-align:center}
+.lg{display:inline-flex;align-items:center;gap:10px;margin-bottom:4px}
+.lm{width:44px;height:44px;background:linear-gradient(135deg,var(--ac),var(--a2));border-radius:10px;display:grid;place-items:center;font-weight:900;font-size:20px;color:#000;transform:rotate(-4deg);box-shadow:0 4px 20px rgba(184,255,0,.2)}
+.lg h1{font-weight:900;font-size:38px;letter-spacing:-2.5px;background:linear-gradient(135deg,var(--tx) 60%,var(--ac));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tg{font-family:'DM Mono',monospace;font-size:12px;color:var(--dm);letter-spacing:2px;text-transform:uppercase}
+.bds{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap}
+.bd{font-family:'DM Mono',monospace;font-size:10px;padding:5px 10px;border-radius:6px}
+.bd.g{color:var(--a2);background:rgba(0,255,200,.06);border:1px solid rgba(0,255,200,.12)}
+.bd.y{color:var(--ac);background:rgba(184,255,0,.06);border:1px solid rgba(184,255,0,.12)}
+.sw{max-width:680px;margin:24px auto 0}
+.sb{display:flex;background:var(--s1);border:2px solid var(--bd);border-radius:14px;overflow:hidden;transition:all .2s}
+.sb:focus-within{border-color:var(--ac);box-shadow:0 0 0 4px rgba(184,255,0,.06),0 8px 32px rgba(0,0,0,.3)}
+.sb input{flex:1;background:transparent;border:none;padding:16px 22px;font-family:'Outfit',sans-serif;font-size:16px;font-weight:500;color:var(--tx);outline:none}
+.sb input::placeholder{color:var(--dm);font-weight:400}
+.sbtn{background:var(--ac);color:#000;border:none;padding:16px 28px;font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s}
+.sbtn:hover{background:#d0ff44}
+.cs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:16px}
+.ct{display:flex;align-items:center;gap:5px;padding:7px 12px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;font-family:'DM Mono',monospace;font-size:11px;color:var(--dm);cursor:pointer;transition:all .15s;user-select:none}
+.ct:hover{border-color:var(--ac);color:var(--ac);background:rgba(184,255,0,.04)}
+.ct.on{border-color:var(--ac);background:var(--ac);color:#000;font-weight:500}
+.rb{display:flex;align-items:center;justify-content:space-between;margin:32px 0 16px;padding-bottom:10px;border-bottom:1px solid var(--bd)}
+.rb h2{font-size:16px;font-weight:600}
+.rc{font-family:'DM Mono',monospace;font-size:12px;color:var(--dm)}
+.gr{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;padding-bottom:40px}
+.cd{background:var(--s1);border:1px solid var(--bd);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .25s cubic-bezier(.16,1,.3,1);animation:up .35s ease both}
+@keyframes up{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.cd:hover{border-color:var(--ac);transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.5),0 0 0 1px var(--ac)}
+.cd-i{position:relative;aspect-ratio:1;background:var(--s2);overflow:hidden}
+.cd-i img{width:100%;height:100%;object-fit:cover;transition:opacity .4s,transform .5s cubic-bezier(.16,1,.3,1)}
+.cd:hover .cd-i img{transform:scale(1.08)}
+.cd-h{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+.cd:hover .cd-h{opacity:1}
+.cd-hb{background:var(--ac);color:#000;padding:10px 20px;border-radius:10px;font-weight:700;font-size:13px}
+.tcc{position:absolute;top:10px;left:10px;background:var(--a2);color:#000;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;padding:3px 8px;border-radius:5px}
+.t4k{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.65);color:var(--ac);font-family:'DM Mono',monospace;font-size:11px;font-weight:500;padding:3px 8px;border-radius:5px;backdrop-filter:blur(8px);border:1px solid rgba(184,255,0,.15)}
+.cd-b{padding:12px 14px 14px}
+.cd-b h3{font-size:14px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cd-s{font-family:'DM Mono',monospace;font-size:11px;color:var(--dm);margin-bottom:8px}
+.dl{display:inline-block;font-family:'DM Mono',monospace;font-size:11px;color:var(--ac);text-decoration:none;padding:5px 12px;border:1px solid rgba(184,255,0,.25);border-radius:6px;transition:all .15s}
+.dl:hover{background:var(--ac);color:#000}
+.sk{position:absolute;inset:0;display:grid;place-items:center}
+.skp{width:50%;height:50%;border-radius:10px;background:linear-gradient(110deg,var(--s2) 30%,var(--bd) 50%,var(--s2) 70%);background-size:200% 100%;animation:sh 1.5s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.cd-e{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--dm);font-size:24px}
+.cd-e small{font-size:10px;font-family:'DM Mono',monospace}
+.em{text-align:center;padding:80px 20px}
+.em .ei{font-size:56px;margin-bottom:16px}
+.em h3{font-size:20px;font-weight:700;margin-bottom:6px}
+.em p{font-family:'DM Mono',monospace;font-size:13px;color:var(--dm);max-width:400px;margin:0 auto}
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;animation:fi .15s ease}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.mdl{background:var(--s1);border:1px solid var(--bd);border-radius:18px;max-width:600px;width:100%;overflow:hidden;position:relative;animation:mp .25s cubic-bezier(.16,1,.3,1);max-height:90vh;overflow-y:auto}
+@keyframes mp{from{opacity:0;transform:scale(.92) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.mx{position:absolute;top:12px;right:12px;width:36px;height:36px;background:rgba(0,0,0,.6);border:1px solid var(--bd);color:var(--tx);border-radius:8px;font-size:16px;cursor:pointer;z-index:10;display:grid;place-items:center;backdrop-filter:blur(8px);transition:all .15s}
+.mx:hover{background:#f33;border-color:#f33}
+.mdl>img{width:100%;aspect-ratio:1;object-fit:cover}
+.mb{padding:18px 22px 22px}
+.mb h2{font-size:22px;font-weight:700;margin-bottom:12px}
+.mts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.mt{font-family:'DM Mono',monospace;font-size:11px;padding:4px 10px;border-radius:6px}
+.mt.g2{color:var(--a2);background:rgba(0,255,200,.08);border:1px solid rgba(0,255,200,.15)}
+.mt.y2{color:var(--ac);background:rgba(184,255,0,.08);border:1px solid rgba(184,255,0,.15)}
+.mt.gr{color:var(--dm);background:var(--s2);border:1px solid var(--bd)}
+.mdl-dl{display:inline-block;background:linear-gradient(135deg,var(--ac),var(--a2));color:#000;padding:12px 28px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;transition:all .15s;box-shadow:0 4px 16px rgba(184,255,0,.15)}
+.mdl-dl:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(184,255,0,.25)}
+.mf{font-family:'DM Mono',monospace;font-size:11px;color:var(--a2);margin-top:14px;opacity:.7}
+footer{text-align:center;padding:32px 20px;font-family:'DM Mono',monospace;font-size:11px;color:var(--dm);border-top:1px solid var(--bd);margin-top:20px}
+.sc{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px}
+.sc a{padding:4px 10px;background:var(--s1);border:1px solid var(--bd);border-radius:6px;font-size:10px;color:var(--dm);text-decoration:none;transition:all .15s}
+.sc a:hover{border-color:var(--ac);color:var(--ac)}
+@media(max-width:640px){.lg h1{font-size:28px}.sb{flex-direction:column}.sbtn{padding:14px}.gr{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}header{padding:28px 0 4px}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script>
+const e=React.createElement,{useState,useEffect,useRef}=React;
+
+const DB=[
+{id:"w1",cat:"wood",title:"Oak Veneer",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Wood067_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Wood067"},
+{id:"w2",cat:"wood",title:"Wooden Planks",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/WoodFloor051_SPHERE.jpg",pg:"https://ambientcg.com/view?id=WoodFloor051"},
+{id:"w3",cat:"wood",title:"Dark Wood Panel",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Wood049_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Wood049"},
+{id:"w4",cat:"wood",title:"Plywood Sheet",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Plywood001_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Plywood001"},
+{id:"w5",cat:"wood",title:"Wood Fine Grain",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Wood026_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Wood026"},
+{id:"w6",cat:"wood",title:"Floor Herringbone",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/WoodFloor041_SPHERE.jpg",pg:"https://ambientcg.com/view?id=WoodFloor041"},
+{id:"w7",cat:"wood",title:"Wood Siding",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/WoodSiding009_SPHERE.jpg",pg:"https://ambientcg.com/view?id=WoodSiding009"},
+{id:"s1",cat:"stone",title:"Rock Mossy",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Rock030_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Rock030"},
+{id:"s2",cat:"stone",title:"Stone Wall Dry",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Stone047_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Stone047"},
+{id:"s3",cat:"stone",title:"Cobblestone Path",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/PavingStones119_SPHERE.jpg",pg:"https://ambientcg.com/view?id=PavingStones119"},
+{id:"s4",cat:"stone",title:"Gravel Loose",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Gravel023_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Gravel023"},
+{id:"s5",cat:"stone",title:"Rock Gray Cliff",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Rock022_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Rock022"},
+{id:"s6",cat:"stone",title:"Paving Stones Worn",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/PavingStones074_SPHERE.jpg",pg:"https://ambientcg.com/view?id=PavingStones074"},
+{id:"m1",cat:"metal",title:"Brushed Aluminum",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Metal032_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Metal032"},
+{id:"m2",cat:"metal",title:"Diamond Plate",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/MetalPlates006_SPHERE.jpg",pg:"https://ambientcg.com/view?id=MetalPlates006"},
+{id:"m3",cat:"metal",title:"Corrugated Steel",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/CorrugatedSteel002_SPHERE.jpg",pg:"https://ambientcg.com/view?id=CorrugatedSteel002"},
+{id:"m4",cat:"metal",title:"Metal Walkway Grate",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/MetalWalkway004_SPHERE.jpg",pg:"https://ambientcg.com/view?id=MetalWalkway004"},
+{id:"m5",cat:"metal",title:"Rusty Iron Sheet",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Rust004_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Rust004"},
+{id:"m6",cat:"metal",title:"Scratched Metal",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Metal034_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Metal034"},
+{id:"c1",cat:"concrete",title:"Concrete Bare",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Concrete034_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Concrete034"},
+{id:"c2",cat:"concrete",title:"Concrete Stained",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Concrete042_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Concrete042"},
+{id:"c3",cat:"concrete",title:"Concrete Wall",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Concrete026_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Concrete026"},
+{id:"c4",cat:"concrete",title:"Concrete Floor",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Concrete022_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Concrete022"},
+{id:"b1",cat:"brick",title:"Red Brick Classic",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Bricks059_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Bricks059"},
+{id:"b2",cat:"brick",title:"Old Weathered Brick",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Bricks076_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Bricks076"},
+{id:"b3",cat:"brick",title:"Painted White Brick",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Bricks052_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Bricks052"},
+{id:"b4",cat:"brick",title:"Herringbone Brick",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Bricks078_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Bricks078"},
+{id:"f1",cat:"fabric",title:"Denim Blue",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Fabric030_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Fabric030"},
+{id:"f2",cat:"fabric",title:"Woven Linen",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Fabric032_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Fabric032"},
+{id:"f3",cat:"fabric",title:"Carpet Berber",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Carpet008_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Carpet008"},
+{id:"f4",cat:"fabric",title:"Knitted Wool",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Fabric035_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Fabric035"},
+{id:"mb1",cat:"marble",title:"White Carrara",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Marble006_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Marble006"},
+{id:"mb2",cat:"marble",title:"Marble Veined",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Marble012_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Marble012"},
+{id:"mb3",cat:"marble",title:"Dark Emperador",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Marble008_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Marble008"},
+{id:"g1",cat:"grass",title:"Green Grass Field",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Ground037_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Ground037"},
+{id:"g2",cat:"grass",title:"Forest Floor Leaves",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Ground054_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Ground054"},
+{id:"g3",cat:"grass",title:"Moss Ground Cover",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Ground042_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Ground042"},
+{id:"sa1",cat:"sand",title:"Sandy Beach",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Ground033_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Ground033"},
+{id:"sa2",cat:"sand",title:"Desert Sand Dune",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Ground027_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Ground027"},
+{id:"t1",cat:"tile",title:"Terracotta Floor",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Tiles074_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Tiles074"},
+{id:"t2",cat:"tile",title:"Hexagon Mosaic",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Tiles101_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Tiles101"},
+{id:"t3",cat:"tile",title:"Subway Tile White",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Tiles093_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Tiles093"},
+{id:"t4",cat:"tile",title:"Roof Tiles Clay",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/RoofingTiles006_SPHERE.jpg",pg:"https://ambientcg.com/view?id=RoofingTiles006"},
+{id:"r1",cat:"rust",title:"Heavy Rust Flaking",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Rust005_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Rust005"},
+{id:"r2",cat:"rust",title:"Rust Patchy Orange",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Rust003_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Rust003"},
+{id:"le1",cat:"leather",title:"Brown Leather Padded",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Leather033_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Leather033"},
+{id:"le2",cat:"leather",title:"Leather Fine Grain",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Leather021_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Leather021"},
+{id:"le3",cat:"leather",title:"Leather Tan Hide",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Leather026_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Leather026"},
+{id:"bk1",cat:"bark",title:"Tree Bark Rough",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Bark004_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Bark004"},
+{id:"bk2",cat:"bark",title:"Birch Bark White",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Bark006_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Bark006"},
+{id:"bk3",cat:"bark",title:"Bark Brown Rough",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Bark007_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Bark007"},
+{id:"p1",cat:"plaster",title:"White Plaster Smooth",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Plaster001_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Plaster001"},
+{id:"p2",cat:"plaster",title:"Rough Stucco Wall",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Plaster003_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Plaster003"},
+{id:"p3",cat:"plaster",title:"Peeling Paint",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/PaintedPlaster017_SPHERE.jpg",pg:"https://ambientcg.com/view?id=PaintedPlaster017"},
+{id:"a1",cat:"asphalt",title:"Asphalt Road Fresh",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Asphalt012_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Asphalt012"},
+{id:"a2",cat:"asphalt",title:"Cracked Asphalt",src:"ambientCG",img:"https://acg-media.struffelproductions.com/file/ambientCG-Web/media/sphere/256-JPG/Asphalt020_SPHERE.jpg",pg:"https://ambientcg.com/view?id=Asphalt020"},
+];
+
+const CATS=[
+{id:"all",l:"All",i:"\u2726"},{id:"wood",l:"Wood",i:"\uD83E\uDEB5"},{id:"stone",l:"Stone",i:"\uD83E\uDEA8"},
+{id:"metal",l:"Metal",i:"\u2699\uFE0F"},{id:"concrete",l:"Concrete",i:"\uD83C\uDFD7\uFE0F"},{id:"brick",l:"Brick",i:"\uD83E\uDDF1"},
+{id:"fabric",l:"Fabric",i:"\uD83E\uDDF5"},{id:"marble",l:"Marble",i:"\uD83D\uDC8E"},{id:"tile",l:"Tile",i:"\uD83D\uDD32"},
+{id:"grass",l:"Grass",i:"\uD83C\uDF3F"},{id:"sand",l:"Sand",i:"\uD83C\uDFD6\uFE0F"},{id:"leather",l:"Leather",i:"\uD83D\uDC5C"},
+{id:"rust",l:"Rust",i:"\uD83D\uDD36"},{id:"bark",l:"Bark",i:"\uD83C\uDF33"},{id:"plaster",l:"Plaster",i:"\uD83C\uDFE0"},
+{id:"asphalt",l:"Asphalt",i:"\uD83D\uDEE3\uFE0F"},
+];
+
+function Card({t,i,onP}){
+  const[ok,setOk]=useState(false);
+  const[er,setEr]=useState(false);
+  return e("div",{className:"cd",style:{animationDelay:i*40+"ms"},onClick:()=>onP(t)},
+    e("div",{className:"cd-i"},
+      !ok&&!er&&e("div",{className:"sk"},e("div",{className:"skp"})),
+      er?e("div",{className:"cd-e"},"\u26A0\uFE0F",e("small",null,"Unavailable")):
+      e("img",{src:t.img,alt:t.title,loading:"lazy",onLoad:()=>setOk(true),onError:()=>setEr(true),style:{opacity:ok?1:0}}),
+      e("div",{className:"cd-h"},e("span",{className:"cd-hb"},"\uD83D\uDD0D Preview")),
+      e("span",{className:"tcc"},"CC0"),
+      e("span",{className:"t4k"},"4K")
+    ),
+    e("div",{className:"cd-b"},
+      e("h3",null,t.title),
+      e("p",{className:"cd-s"},t.src),
+      e("a",{href:t.pg,target:"_blank",rel:"noopener noreferrer",className:"dl",onClick:ev=>ev.stopPropagation()},"Download 4K \u2197")
+    )
+  );
+}
+
+function Modal({t,onC}){
+  if(!t)return null;
+  useEffect(()=>{const f=ev=>ev.key==="Escape"&&onC();window.addEventListener("keydown",f);return()=>window.removeEventListener("keydown",f)},[onC]);
+  return e("div",{className:"mbg",onClick:onC},
+    e("div",{className:"mdl",onClick:ev=>ev.stopPropagation()},
+      e("button",{className:"mx",onClick:onC},"\u2715"),
+      e("img",{src:t.img,alt:t.title}),
+      e("div",{className:"mb"},
+        e("h2",null,t.title),
+        e("div",{className:"mts"},
+          e("span",{className:"mt g2"},"CC0 Licensed"),
+          e("span",{className:"mt y2"},"4K Available"),
+          e("span",{className:"mt gr"},t.src)
+        ),
+        e("a",{href:t.pg,target:"_blank",rel:"noopener noreferrer",className:"mdl-dl"},"Download Full 4K with PBR Maps \u2197"),
+        e("p",{className:"mf"},"\u2713 No watermarks \u00B7 \u2713 Free commercial use \u00B7 \u2713 Seamless tileable")
+      )
+    )
+  );
+}
+
+function App(){
+  const[q,setQ]=useState("");
+  const[cat,setCat]=useState("all");
+  const[pv,setPv]=useState(null);
+  const ref=useRef(null);
+
+  const fl=DB.filter(t=>{
+    const mc=cat==="all"||t.cat===cat;
+    const ql=q.trim().toLowerCase();
+    const mq=!ql||t.title.toLowerCase().includes(ql)||t.cat.includes(ql);
+    return mc&&mq;
+  });
+
+  useEffect(()=>{ref.current&&ref.current.focus()},[]);
+
+  return e("div",{className:"w"},
+    e("header",null,
+      e("div",{className:"lg"},
+        e("div",{className:"lm"},"\u25C6"),
+        e("h1",null,"TEX4K")
+      ),
+      e("p",{className:"tg"},"Free 4K PBR Textures \u00B7 Zero Watermarks \u00B7 Commercial Ready"),
+      e("div",{className:"bds"},
+        e("span",{className:"bd g"},"\u2713 CC0 Licensed"),
+        e("span",{className:"bd g"},"\u2713 No Watermarks"),
+        e("span",{className:"bd y"},"\u2713 4K Resolution"),
+        e("span",{className:"bd y"},"\u2713 PBR Maps")
+      )
+    ),
+    e("section",{className:"sw"},
+      e("div",{className:"sb"},
+        e("input",{ref:ref,type:"text",value:q,onChange:ev=>setQ(ev.target.value),placeholder:"Search textures... (oak, marble, rust, concrete)"}),
+        e("button",{className:"sbtn"},"Search")
+      ),
+      e("div",{className:"cs"},
+        CATS.map(c=>e("div",{key:c.id,className:"ct"+(cat===c.id?" on":""),onClick:()=>setCat(c.id)},
+          e("span",null,c.i)," ",c.l
+        ))
+      )
+    ),
+    e("div",{className:"rb"},
+      e("h2",null,(cat!=="all"?(CATS.find(c=>c.id===cat)||{}).l:"All")+" Textures"),
+      e("span",{className:"rc"},fl.length+" textures")
+    ),
+    fl.length>0?
+      e("div",{className:"gr"},fl.map((t,i)=>e(Card,{key:t.id,t:t,i:i,onP:setPv}))):
+      e("div",{className:"em"},
+        e("div",{className:"ei"},"\uD83D\uDD0D"),
+        e("h3",null,"No matches"),
+        e("p",null,"Try different keywords or browse categories above.")
+      ),
+    e("footer",null,
+      e("p",null,"All textures CC0 licensed from trusted libraries. Click \"Download 4K\" for full resolution with PBR maps."),
+      e("div",{className:"sc"},
+        e("a",{href:"https://ambientcg.com",target:"_blank",rel:"noopener noreferrer"},"ambientCG"),
+        e("a",{href:"https://polyhaven.com/textures",target:"_blank",rel:"noopener noreferrer"},"Poly Haven"),
+        e("a",{href:"https://www.cgbookcase.com",target:"_blank",rel:"noopener noreferrer"},"CG Bookcase"),
+        e("a",{href:"https://sharetextures.com",target:"_blank",rel:"noopener noreferrer"},"Share Textures"),
+        e("a",{href:"https://freepbr.com",target:"_blank",rel:"noopener noreferrer"},"FreePBR")
+      )
+    ),
+    e(Modal,{t:pv,onC:()=>setPv(null)})
+  );
+}
+
+ReactDOM.render(e(App),document.getElementById("root"));
+</script>
+</body>
+</html>
