@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💩 Code Brown Countdown</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1a1008;
+    --card: #2a1c0e;
+    --accent: #c8870a;
+    --danger: #d4380d;
+    --warning: #faad14;
+    --safe: #7cb305;
+    --text: #f5e6d0;
+    --muted: #a89070;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(200, 135, 10, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(212, 56, 13, 0.06) 0%, transparent 50%);
+  }
+
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: dropIn 0.6s ease-out;
+  }
+
+  @keyframes dropIn {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .logo {
+    font-size: 64px;
+    line-height: 1;
+    margin-bottom: 8px;
+    animation: wobble 2s ease-in-out infinite;
+  }
+
+  @keyframes wobble {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+  }
+
+  h1 {
+    font-family: 'Bangers', cursive;
+    font-size: 42px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-shadow: 0 2px 20px rgba(200, 135, 10, 0.3);
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  .pressure-section {
+    margin-bottom: 36px;
+    animation: fadeUp 0.6s ease-out 0.2s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-label {
+    font-family: 'Bangers', cursive;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .pressure-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .pressure-btn {
+    position: relative;
+    background: var(--card);
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: 18px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.25s ease;
+    color: var(--text);
+    text-align: left;
+    overflow: hidden;
+  }
+
+  .pressure-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .pressure-btn:hover {
+    transform: translateX(6px);
+    border-color: var(--accent);
+  }
+
+  .pressure-btn.selected {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(200, 135, 10, 0.15), rgba(200, 135, 10, 0.05));
+    box-shadow: 0 0 30px rgba(200, 135, 10, 0.1);
+  }
+
+  .pressure-btn .icon {
+    font-size: 32px;
+    flex-shrink: 0;
+    width: 48px;
+    text-align: center;
+  }
+
+  .pressure-btn .info {
+    flex: 1;
+  }
+
+  .pressure-btn .name {
+    font-family: 'Bangers', cursive;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+
+  .pressure-btn .desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .pressure-btn .threat-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    border-radius: 0 0 14px 14px;
+    transition: width 0.4s ease;
+  }
+
+  .factors-section {
+    margin-bottom: 36px;
+    animation: fadeUp 0.6s ease-out 0.4s both;
+  }
+
+  .factors-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .factor-btn {
+    background: var(--card);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    color: var(--text);
+    text-align: center;
+    transition: all 0.2s ease;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .factor-btn:hover {
+    border-color: rgba(200, 135, 10, 0.4);
+  }
+
+  .factor-btn.selected {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(200, 135, 10, 0.12), transparent);
+  }
+
+  .factor-btn .factor-icon {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .calculate-btn {
+    width: 100%;
+    padding: 18px;
+    font-family: 'Bangers', cursive;
+    font-size: 24px;
+    letter-spacing: 2px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--accent), #e09800);
+    color: var(--bg);
+    transition: all 0.3s ease;
+    margin-bottom: 36px;
+    animation: fadeUp 0.6s ease-out 0.5s both;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .calculate-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 30px rgba(200, 135, 10, 0.4);
+  }
+
+  .calculate-btn:active { transform: scale(0.98); }
+
+  .calculate-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* RESULTS */
+  .results {
+    display: none;
+    animation: fadeUp 0.5s ease-out;
+  }
+
+  .results.show { display: block; }
+
+  .countdown-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 36px 24px;
+    text-align: center;
+    margin-bottom: 24px;
+    border: 1px solid rgba(200, 135, 10, 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .countdown-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, rgba(200, 135, 10, 0.03), transparent, rgba(212, 56, 13, 0.03), transparent);
+    animation: spin 12s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .countdown-card > * { position: relative; z-index: 1; }
+
+  .threat-level-label {
+    font-family: 'Bangers', cursive;
+    font-size: 16px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .countdown-time {
+    font-family: 'Bangers', cursive;
+    font-size: 80px;
+    line-height: 1;
+    margin: 12px 0;
+    text-shadow: 0 4px 30px currentColor;
+  }
+
+  .countdown-unit {
+    font-size: 18px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .progress-ring {
+    width: 200px;
+    height: 200px;
+    margin: 20px auto;
+    position: relative;
+  }
+
+  .progress-ring svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+  }
+
+  .progress-ring .bg { stroke: rgba(255,255,255,0.05); }
+  .progress-ring .fg { transition: stroke-dashoffset 1s ease, stroke 1s ease; }
+
+  .progress-ring .center-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bangers', cursive;
+  }
+
+  .progress-ring .center-text .time-val {
+    font-size: 48px;
+    line-height: 1;
+  }
+
+  .progress-ring .center-text .time-label {
+    font-size: 14px;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+
+  .science-box {
+    background: rgba(200, 135, 10, 0.06);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  .science-box h3 {
+    font-family: 'Bangers', cursive;
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .science-box p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .science-box .ref {
+    display: block;
+    margin-top: 8px;
+    font-size: 11px;
+    color: rgba(168, 144, 112, 0.6);
+    font-style: italic;
+  }
+
+  .tips {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .tips h3 {
+    font-family: 'Bangers', cursive;
+    font-size: 18px;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .tip-item:last-child { margin-bottom: 0; }
+  .tip-item .tip-icon { flex-shrink: 0; font-size: 18px; }
+
+  .reset-btn {
+    width: 100%;
+    padding: 14px;
+    font-family: 'Bangers', cursive;
+    font-size: 18px;
+    letter-spacing: 1px;
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--accent);
+    transition: all 0.2s;
+  }
+
+  .reset-btn:hover {
+    background: rgba(200, 135, 10, 0.1);
+  }
+
+  .disclaimer {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(168, 144, 112, 0.4);
+    margin-top: 40px;
+    line-height: 1.5;
+  }
+
+  .live-timer { font-variant-numeric: tabular-nums; }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .pulse { animation: pulse 1s ease-in-out infinite; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+    20%, 40%, 60%, 80% { transform: translateX(4px); }
+  }
+
+  .shake { animation: shake 0.5s ease-in-out infinite; }
+
+  .input-section { display: block; }
+  .input-section.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="logo">💩</div>
+    <h1>CODE BROWN COUNTDOWN</h1>
+    <p class="subtitle">Gastroenterology-adjacent time estimation since 2026</p>
+  </header>
+
+  <div class="input-section" id="inputSection">
+    <div class="pressure-section">
+      <div class="section-label">⚠️ Current Threat Level</div>
+      <div class="pressure-grid">
+        <button class="pressure-btn" data-level="1" onclick="selectPressure(this)">
+          <span class="icon">😌</span>
+          <div class="info">
+            <div class="name">Slight Rumble</div>
+            <div class="desc">A distant thunder. You know it's coming, but you have time. Maybe.</div>
+          </div>
+          <div class="threat-bar" style="width: 20%; background: var(--safe);"></div>
+        </button>
+
+        <button class="pressure-btn" data-level="2" onclick="selectPressure(this)">
+          <span class="icon">😐</span>
+          <div class="info">
+            <div class="name">Moderate Pressure</div>
+            <div class="desc">The internal negotiations have begun. Your colon is sending formal requests.</div>
+          </div>
+          <div class="threat-bar" style="width: 40%; background: var(--safe);"></div>
+        </button>
+
+        <button class="pressure-btn" data-level="3" onclick="selectPressure(this)">
+          <span class="icon">😰</span>
+          <div class="info">
+            <div class="name">Prairie Doggin'</div>
+            <div class="desc">Peek-a-boo situation. The turtle is poking its head out. Active clenching required.</div>
+          </div>
+          <div class="threat-bar" style="width: 65%; background: var(--warning);"></div>
+        </button>
+
+        <button class="pressure-btn" data-level="4" onclick="selectPressure(this)">
+          <span class="icon">😱</span>
+          <div class="info">
+            <div class="name">Critical Mass</div>
+            <div class="desc">Every step is a gamble. Your sphincter is filing for resignation.</div>
+          </div>
+          <div class="threat-bar" style="width: 85%; background: var(--danger);"></div>
+        </button>
+
+        <button class="pressure-btn" data-level="5" onclick="selectPressure(this)">
+          <span class="icon">🚨</span>
+          <div class="info">
+            <div class="name">DEFCON 1 — ABOUT TO BLOW</div>
+            <div class="desc">This is not a drill. The levee is breaking. God help us all.</div>
+          </div>
+          <div class="threat-bar" style="width: 100%; background: var(--danger);"></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="factors-section">
+      <div class="section-label">🔬 Aggravating Factors</div>
+      <div class="factors-grid">
+        <button class="factor-btn" onclick="toggleFactor(this)" data-factor="coffee">
+          <span class="factor-icon">☕</span>
+          Had Coffee
+        </button>
+        <button class="factor-btn" onclick="toggleFactor(this)" data-factor="spicy">
+          <span class="factor-icon">🌶️</span>
+          Ate Spicy Food
+        </button>
+        <button class="factor-btn" onclick="toggleFactor(this)" data-factor="dairy">
+          <span class="factor-icon">🧀</span>
+          Dairy Overload
+        </button>
+        <button class="factor-btn" onclick="toggleFactor(this)" data-factor="fiber">
+          <span class="factor-icon">🥦</span>
+          Fiber Bomb
+        </button>
+        <button class="factor-btn" onclick="toggleFactor(this)" data-factor="anxiety">
+          <span class="factor-icon">😬</span>
+          Stressed / Anxious
+        </button>
+        <button class="factor-btn" onclick="toggleFactor(this)" data-factor="taco">
+          <span class="factor-icon">🌮</span>
+          Taco Bell
+        </button>
+      </div>
+    </div>
+
+    <button class="calculate-btn" id="calcBtn" disabled onclick="calculate()">
+      🚽 CALCULATE TIME REMAINING
+    </button>
+  </div>
+
+  <div class="results" id="results">
+    <div class="countdown-card">
+      <div class="threat-level-label" id="threatLabel">THREAT LEVEL</div>
+
+      <div class="progress-ring">
+        <svg viewBox="0 0 200 200">
+          <circle class="bg" cx="100" cy="100" r="88" fill="none" stroke-width="8"/>
+          <circle class="fg" id="progressCircle" cx="100" cy="100" r="88" fill="none" stroke-width="8"
+            stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="0"/>
+        </svg>
+        <div class="center-text">
+          <div class="time-val live-timer" id="timerDisplay">--</div>
+          <div class="time-label" id="timerUnit">MINUTES</div>
+        </div>
+      </div>
+
+      <div class="countdown-unit" id="verdictText"></div>
+    </div>
+
+    <div class="science-box">
+      <h3>🔬 The Science</h3>
+      <p id="scienceText"></p>
+      <span class="ref" id="scienceRef"></span>
+    </div>
+
+    <div class="tips">
+      <h3>🏃 Survival Tips</h3>
+      <div id="tipsContainer"></div>
+    </div>
+
+    <button class="reset-btn" onclick="reset()">🔄 RECALCULATE</button>
+  </div>
+
+  <p class="disclaimer">
+    ⚠️ This is satire. Not medical advice. If you're having genuine bowel issues, please see a real gastroenterologist.<br>
+    No sphincters were harmed in the making of this app.
+  </p>
+</div>
+
+<script>
+  let selectedLevel = null;
+  let selectedFactors = new Set();
+  let countdownInterval = null;
+
+  function selectPressure(btn) {
+    document.querySelectorAll('.pressure-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedLevel = parseInt(btn.dataset.level);
+    document.getElementById('calcBtn').disabled = false;
+  }
+
+  function toggleFactor(btn) {
+    btn.classList.toggle('selected');
+    const f = btn.dataset.factor;
+    if (selectedFactors.has(f)) selectedFactors.delete(f);
+    else selectedFactors.add(f);
+  }
+
+  // "Science"-based time estimates (in seconds)
+  const baseTimes = {
+    1: { min: 45 * 60, max: 90 * 60 },   // 45-90 min
+    2: { min: 20 * 60, max: 45 * 60 },   // 20-45 min
+    3: { min: 5 * 60, max: 15 * 60 },    // 5-15 min
+    4: { min: 90, max: 5 * 60 },          // 1.5-5 min
+    5: { min: 15, max: 90 }               // 15-90 sec
+  };
+
+  // Factor multipliers (reduce time)
+  const factorMultipliers = {
+    coffee: 0.7,    // caffeine stimulates colonic motor activity
+    spicy: 0.75,    // capsaicin accelerates GI transit
+    dairy: 0.8,     // lactose intolerance affects ~68% globally
+    fiber: 0.85,    // high fiber increases stool bulk & urgency
+    anxiety: 0.65,  // gut-brain axis is real
+    taco: 0.5       // self-explanatory
+  };
+
+  const scienceData = {
+    1: {
+      text: "The gastrocolic reflex — the urge to defecate after eating — typically gives 30-60 minutes of warning. Rectal distension sensors detect fecal matter and relay signals via the pelvic splanchnic nerves. At low distension, the internal anal sphincter maintains continence automatically.",
+      ref: "Rao, S.S. et al. (2004). Gastroenterology. Mechanisms of fecal continence and defecation."
+    },
+    2: {
+      text: "At moderate rectal distension (~100-200mL), stretch receptors in the rectal wall trigger the rectoanal inhibitory reflex (RAIR). The internal sphincter relaxes involuntarily while the external sphincter compensates via voluntary contraction. You're in the negotiation phase.",
+      ref: "Bharucha, A.E. (2006). Neurogastroenterology & Motility. Pelvic floor & sphincter physiology."
+    },
+    3: {
+      text: "\"Prairie dogging\" indicates rectal contents have reached the anal canal. The sampling reflex is active — your rectum is literally checking if it's gas or something worse. External sphincter fatigue begins after sustained voluntary contraction (~60-90 seconds of peak effort).",
+      ref: "Rao, S.S. (2003). American Journal of Gastroenterology. Fecal incontinence pathophysiology."
+    },
+    4: {
+      text: "At high rectal volumes (>300mL), the external anal sphincter cannot maintain continence indefinitely. Pudendal nerve fatigue sets in. Colonic high-amplitude propagating contractions (HAPCs) occur 6-8 times daily and are virtually unstoppable once initiated.",
+      ref: "Bassotti, G. et al. (2003). World J Gastroenterol. High-amplitude propagated contractions."
+    },
+    5: {
+      text: "Maximum voluntary sphincter contraction lasts ~40-60 seconds before fatigue. At critical rectal distension, the rectoanal inhibitory reflex overwhelms voluntary control. Intra-abdominal pressure spikes from coughing, laughing, or movement can exceed sphincter closing pressure (40-70 mmHg), causing involuntary expulsion.",
+      ref: "Rao, S.S. & Patel, R.S. (1997). Gastroenterology. Defecation disorders: neuromuscular mechanisms."
+    }
+  };
+
+  const tipsByLevel = {
+    1: [
+      { icon: "🧘", text: "Stay calm. Deep breaths. Your sphincter is performing admirably under current conditions." },
+      { icon: "🗺️", text: "Begin casually identifying nearby restroom locations. Reconnaissance is key." },
+      { icon: "🚶", text: "Avoid sudden movements, jogging, or jumping jacks. Walk with purpose and dignity." }
+    ],
+    2: [
+      { icon: "📍", text: "Lock in your nearest restroom. Have a backup restroom. Maybe a backup backup." },
+      { icon: "🚫", text: "Do NOT drink more coffee. I repeat: step away from the coffee." },
+      { icon: "🧊", text: "Stay cool. Stress activates the gut-brain axis and that's the last thing you need." }
+    ],
+    3: [
+      { icon: "🏃", text: "Begin controlled migration toward the nearest restroom immediately." },
+      { icon: "🦆", text: "Adopt the \"casual but purposeful\" walk. You know the one. Small steps." },
+      { icon: "🤐", text: "Avoid all conversation. Social engagement diverts resources from sphincter control." }
+    ],
+    4: [
+      { icon: "🚨", text: "DROP EVERYTHING. This is now your only priority." },
+      { icon: "🔒", text: "Clench like your dignity depends on it. Because it absolutely does." },
+      { icon: "📱", text: "Cancel all meetings. You have one job right now and it requires a toilet." }
+    ],
+    5: [
+      { icon: "🙏", text: "There may not be time for tips. This is between you and God now." },
+      { icon: "💨", text: "DO NOT TRUST ANY FART. Every fart is a potential betrayal." },
+      { icon: "🧱", text: "If no restroom is available, you need a bush, a bucket, or a miracle." }
+    ]
+  };
+
+  const threatNames = {
+    1: "YELLOW — ELEVATED",
+    2: "ORANGE — HIGH",
+    3: "ORANGE-RED — SEVERE",
+    4: "RED — CRITICAL",
+    5: "BROWN — CATASTROPHIC"
+  };
+
+  const threatColors = {
+    1: "#7cb305",
+    2: "#faad14",
+    3: "#fa8c16",
+    4: "#d4380d",
+    5: "#8B4513"
+  };
+
+  function calculate() {
+    const base = baseTimes[selectedLevel];
+    let totalSeconds = base.min + Math.random() * (base.max - base.min);
+
+    selectedFactors.forEach(f => {
+      totalSeconds *= factorMultipliers[f];
+    });
+
+    totalSeconds = Math.max(5, Math.round(totalSeconds));
+
+    // Show results
+    document.getElementById('inputSection').classList.add('hidden');
+    const results = document.getElementById('results');
+    results.classList.add('show');
+
+    const color = threatColors[selectedLevel];
+    const label = document.getElementById('threatLabel');
+    label.textContent = `DEFECATION THREAT: ${threatNames[selectedLevel]}`;
+    label.style.color = color;
+
+    // Verdict
+    const verdicts = {
+      1: "You have time. Use it wisely. Scout restrooms.",
+      2: "The clock is ticking. Start planning your exit strategy.",
+      3: "Situation critical. Move toward porcelain NOW.",
+      4: "May the odds be ever in your favor.",
+      5: "Sprint. Just... sprint. 🏃💨"
+    };
+    document.getElementById('verdictText').textContent = verdicts[selectedLevel];
+
+    // Science
+    const sci = scienceData[selectedLevel];
+    document.getElementById('scienceText').textContent = sci.text;
+    document.getElementById('scienceRef').textContent = sci.ref;
+
+    // Tips
+    const tipsContainer = document.getElementById('tipsContainer');
+    tipsContainer.innerHTML = '';
+    tipsByLevel[selectedLevel].forEach(tip => {
+      tipsContainer.innerHTML += `<div class="tip-item"><span class="tip-icon">${tip.icon}</span><span>${tip.text}</span></div>`;
+    });
+
+    // Start countdown
+    startCountdown(totalSeconds, color);
+  }
+
+  function startCountdown(totalSeconds, color) {
+    let remaining = totalSeconds;
+    const circle = document.getElementById('progressCircle');
+    const display = document.getElementById('timerDisplay');
+    const unit = document.getElementById('timerUnit');
+    const circumference = 2 * Math.PI * 88;
+
+    circle.style.stroke = color;
+
+    function update() {
+      if (remaining <= 0) {
+        clearInterval(countdownInterval);
+        display.textContent = "💀";
+        unit.textContent = "TOO LATE";
+        display.parentElement.classList.add('shake');
+        circle.style.strokeDashoffset = circumference;
+        return;
+      }
+
+      const progress = 1 - (remaining / totalSeconds);
+      circle.style.strokeDashoffset = circumference * (1 - progress);
+
+      if (remaining < 10) {
+        circle.style.stroke = '#d4380d';
+        display.parentElement.classList.add('pulse');
+      }
+
+      if (remaining >= 3600) {
+        const h = Math.floor(remaining / 3600);
+        const m = Math.floor((remaining % 3600) / 60);
+        display.textContent = `${h}:${String(m).padStart(2, '0')}`;
+        unit.textContent = "HR:MIN";
+      } else if (remaining >= 60) {
+        const m = Math.floor(remaining / 60);
+        const s = remaining % 60;
+        display.textContent = `${m}:${String(s).padStart(2, '0')}`;
+        unit.textContent = "MIN:SEC";
+      } else {
+        display.textContent = remaining;
+        unit.textContent = "SECONDS";
+      }
+
+      remaining--;
+    }
+
+    update();
+    countdownInterval = setInterval(update, 1000);
+  }
+
+  function reset() {
+    clearInterval(countdownInterval);
+    selectedLevel = null;
+    selectedFactors.clear();
+    document.querySelectorAll('.pressure-btn, .factor-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('calcBtn').disabled = true;
+    document.getElementById('results').classList.remove('show');
+    document.getElementById('inputSection').classList.remove('hidden');
+    document.getElementById('timerDisplay').parentElement.classList.remove('pulse', 'shake');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
