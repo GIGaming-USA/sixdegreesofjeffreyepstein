@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💩 Code Brown Countdown</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1a1008;
+    --card: #2a1c0e;
+    --accent: #c8870a;
+    --danger: #d4380d;
+    --warning: #faad14;
+    --safe: #7cb305;
+    --text: #f5e6d0;
+    --muted: #a89070;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(200, 135, 10, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(212, 56, 13, 0.06) 0%, transparent 50%);
+  }
+
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: dropIn 0.6s ease-out;
+  }
+
+  @keyframes dropIn {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .logo {
+    font-size: 64px;
+    line-height: 1;
+    margin-bottom: 8px;
+    animation: wobble 2s ease-in-out infinite;
+  }
+
+  @keyframes wobble {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+  }
+
+  h1 {
+    font-family: 'Bangers', cursive;
+    font-size: 42px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-shadow: 0 2px 20px rgba(200, 135, 10, 0.3);
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  .pressure-section {
+    margin-bottom: 36px;
+    animation: fadeUp 0.6s ease-out 0.2s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-label {
+    font-family: 'Bangers', cursive;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .pressure-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .pressure-btn {
+    position: relative;
+    background: var(--card);
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: 18px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.25s ease;
+    color: var(--text);
+    text-align: left;
+    overflow: hidden;
+  }
+
+  .pressure-btn:hover {
+    transform: translateX(6px);
+    border-color: var(--accent);
+  }
+
+  .pressure-btn.selected {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(200, 135, 10, 0.15), rgba(200, 135, 10, 0.05));
+    box-shadow: 0 0 30px rgba(200, 135, 10, 0.1);
+  }
+
+  .pressure-btn .icon {
+    font-size: 32px;
+    flex-shrink: 0;
+    width: 48px;
+    text-align: center;
+  }
+
+  .pressure-btn .info { flex: 1; }
+
+  .pressure-btn .name {
+    font-family: 'Bangers', cursive;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+
+  .pressure-btn .desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .pressure-btn .threat-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    border-radius: 0 0 14px 14px;
+  }
+
+  .factors-section {
+    margin-bottom: 36px;
+    animation: fadeUp 0.6s ease-out 0.4s both;
+  }
+
+  .factors-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .factor-btn {
+    background: var(--card);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    color: var(--text);
+    text-align: center;
+    transition: all 0.2s ease;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .factor-btn:hover { border-color: rgba(200, 135, 10, 0.4); }
+
+  .factor-btn.selected {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(200, 135, 10, 0.12), transparent);
+  }
+
+  .factor-btn .factor-icon {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .factor-note {
+    grid-column: 1 / -1;
+    font-size: 11px;
+    color: rgba(168, 144, 112, 0.5);
+    text-align: center;
+    padding-top: 4px;
+    line-height: 1.4;
+  }
+
+  .calculate-btn {
+    width: 100%;
+    padding: 18px;
+    font-family: 'Bangers', cursive;
+    font-size: 24px;
+    letter-spacing: 2px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--accent), #e09800);
+    color: var(--bg);
+    transition: all 0.3s ease;
+    margin-bottom: 36px;
+    animation: fadeUp 0.6s ease-out 0.5s both;
+  }
+
+  .calculate-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 30px rgba(200, 135, 10, 0.4);
+  }
+
+  .calculate-btn:active { transform: scale(0.98); }
+
+  .calculate-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .results {
+    display: none;
+    animation: fadeUp 0.5s ease-out;
+  }
+
+  .results.show { display: block; }
+
+  .countdown-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 36px 24px;
+    text-align: center;
+    margin-bottom: 24px;
+    border: 1px solid rgba(200, 135, 10, 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .countdown-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, rgba(200, 135, 10, 0.03), transparent, rgba(212, 56, 13, 0.03), transparent);
+    animation: spin 12s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .countdown-card > * { position: relative; z-index: 1; }
+
+  .threat-level-label {
+    font-family: 'Bangers', cursive;
+    font-size: 16px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .progress-ring {
+    width: 200px;
+    height: 200px;
+    margin: 20px auto;
+    position: relative;
+  }
+
+  .progress-ring svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+  }
+
+  .progress-ring .bg { stroke: rgba(255,255,255,0.05); }
+  .progress-ring .fg { transition: stroke-dashoffset 1s ease, stroke 1s ease; }
+
+  .progress-ring .center-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bangers', cursive;
+  }
+
+  .progress-ring .center-text .time-val {
+    font-size: 48px;
+    line-height: 1;
+  }
+
+  .progress-ring .center-text .time-label {
+    font-size: 14px;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+
+  .countdown-unit {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .range-note {
+    font-size: 13px;
+    color: rgba(168, 144, 112, 0.7);
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  .science-box {
+    background: rgba(200, 135, 10, 0.06);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    text-align: left;
+  }
+
+  .science-box h3 {
+    font-family: 'Bangers', cursive;
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .science-box p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .science-box .ref {
+    display: block;
+    margin-top: 8px;
+    font-size: 11px;
+    color: rgba(168, 144, 112, 0.5);
+    font-style: italic;
+  }
+
+  .methodology {
+    background: rgba(200, 135, 10, 0.04);
+    border: 1px solid rgba(200, 135, 10, 0.1);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  .methodology h3 {
+    font-family: 'Bangers', cursive;
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .methodology p {
+    font-size: 12px;
+    color: rgba(168, 144, 112, 0.6);
+    line-height: 1.6;
+  }
+
+  .tips {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .tips h3 {
+    font-family: 'Bangers', cursive;
+    font-size: 18px;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .tip-item:last-child { margin-bottom: 0; }
+  .tip-item .tip-icon { flex-shrink: 0; font-size: 18px; }
+
+  .reset-btn {
+    width: 100%;
+    padding: 14px;
+    font-family: 'Bangers', cursive;
+    font-size: 18px;
+    letter-spacing: 1px;
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--accent);
+    transition: all 0.2s;
+  }
+
+  .reset-btn:hover { background: rgba(200, 135, 10, 0.1); }
+
+  .disclaimer {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(168, 144, 112, 0.4);
+    margin-top: 40px;
+    line-height: 1.5;
+  }
+
+  .live-timer { font-variant-numeric: tabular-nums; }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .pulse { animation: pulse 1s ease-in-out infinite; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+    20%, 40%, 60%, 80% { transform: translateX(4px); }
+  }
+
+  .shake { animation: shake 0.5s ease-in-out infinite; }
+
+  .input-section { display: block; }
+  .input-section.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="logo">💩</div>
+    <h1>CODE BROWN COUNTDOWN</h1>
+    <p class="subtitle">Estimated time to involuntary loss of bowel control — based on actual gastroenterology research</p>
+  </header>
+
+  <div class="input-section" id="inputSection">
+    <div class="pressure-section">
+      <div class="section-label">⚠️ Current Situation</div>
+      <div class="pressure-grid">
+        <button class="pressure-btn" data-level="1" onclick="selectPressure(this)">
+          <span class="icon">😌</span>
+          <div class="info">
+            <div class="name">Slight Awareness</div>
+            <div class="desc">You know something's brewing. A gentle internal memo has been sent. No urgency.</div>
+          </div>
+          <div class="threat-bar" style="width: 15%; background: var(--safe);"></div>
+        </button>
+
+        <button class="pressure-btn" data-level="2" onclick="selectPressure(this)">
+          <span class="icon">😐</span>
+          <div class="info">
+            <div class="name">Moderate Pressure</div>
+            <div class="desc">Clear signal to go, but you can comfortably defer. Internal sphincter doing its job.</div>
+          </div>
+          <div class="threat-bar" style="width: 30%; background: var(--safe);"></div>
+        </button>
+
+        <button class="pressure-btn" data-level="3" onclick="selectPressure(this)">
+          <span class="icon">😰</span>
+          <div class="info">
+            <div class="name">Prairie Doggin'</div>
+            <div class="desc">Stool at the anal canal. Active external sphincter clenching required. The RAIR is firing.</div>
+          </div>
+          <div class="threat-bar" style="width: 60%; background: var(--warning);"></div>
+        </button>
+
+        <button class="pressure-btn" data-level="4" onclick="selectPressure(this)">
+          <span class="icon">😱</span>
+          <div class="info">
+            <div class="name">Sustained Urgency</div>
+            <div class="desc">Continuous max-effort clenching. Waves of pressure. External sphincter is fighting for its life.</div>
+          </div>
+          <div class="threat-bar" style="width: 82%; background: var(--danger);"></div>
+        </button>
+
+        <button class="pressure-btn" data-level="5" onclick="selectPressure(this)">
+          <span class="icon">🚨</span>
+          <div class="info">
+            <div class="name">DEFCON 1 — SPHINCTER OVERWHELMED</div>
+            <div class="desc">Sphincter fatigue has set in. High-amplitude contractions active. Holding by sheer willpower.</div>
+          </div>
+          <div class="threat-bar" style="width: 100%; background: var(--danger);"></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="factors-section">
+      <div class="section-label">🔬 Aggravating Factors</div>
+      <div class="factors-grid">
+        <button class="factor-btn" onclick="toggleFactor(this)" data-factor="coffee">
+          <span class="factor-icon">☕</span>
+          Had Coffee Recently
+        </button>
+        <button class="factor-btn" onclick="toggleFactor(this)" data-factor="spicy">
+          <span class="factor-icon">🌶️</span>
+          Ate Spicy Food
+        </button>
+        <button class="factor-btn" onclick="toggleFactor(this)" data-factor="dairy">
+          <span class="factor-icon">🧀</span>
+          Lactose + Dairy
+        </button>
+        <button class="factor-btn" onclick="toggleFactor(this)" data-factor="diarrhea">
+          <span class="factor-icon">💧</span>
+          Loose / Diarrhea
+        </button>
+        <button class="factor-btn" onclick="toggleFactor(this)" data-factor="anxiety">
+          <span class="factor-icon">😬</span>
+          Stressed / Anxious
+        </button>
+        <button class="factor-btn" onclick="toggleFactor(this)" data-factor="meal">
+          <span class="factor-icon">🍔</span>
+          Just Ate a Big Meal
+        </button>
+        <p class="factor-note">Adjustments based on published effects on colonic motility, rectal sensitivity, and stool consistency.</p>
+      </div>
+    </div>
+
+    <button class="calculate-btn" id="calcBtn" disabled onclick="calculate()">
+      🚽 ESTIMATE TIME TO LOSS OF CONTROL
+    </button>
+  </div>
+
+  <div class="results" id="results">
+    <div class="countdown-card">
+      <div class="threat-level-label" id="threatLabel">THREAT LEVEL</div>
+
+      <div class="progress-ring">
+        <svg viewBox="0 0 200 200">
+          <circle class="bg" cx="100" cy="100" r="88" fill="none" stroke-width="8"/>
+          <circle class="fg" id="progressCircle" cx="100" cy="100" r="88" fill="none" stroke-width="8"
+            stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="0"/>
+        </svg>
+        <div class="center-text">
+          <div class="time-val live-timer" id="timerDisplay">--</div>
+          <div class="time-label" id="timerUnit">MINUTES</div>
+        </div>
+      </div>
+
+      <div class="countdown-unit" id="verdictText"></div>
+      <div class="range-note" id="rangeNote"></div>
+    </div>
+
+    <div id="scienceBoxes"></div>
+
+    <div class="methodology">
+      <h3>📊 How This Was Estimated</h3>
+      <p id="methodText"></p>
+    </div>
+
+    <div class="tips">
+      <h3>🏃 Survival Tips</h3>
+      <div id="tipsContainer"></div>
+    </div>
+
+    <button class="reset-btn" onclick="reset()">🔄 RECALCULATE</button>
+  </div>
+
+  <p class="disclaimer">
+    ⚠️ This is a humor app with real-ish science. Not medical advice. Individual variation is enormous.<br>
+    If you regularly can't hold it, see a gastroenterologist — fecal urgency is very treatable.<br>
+    No sphincters were harmed in the making of this app.
+  </p>
+</div>
+
+<script>
+  let selectedLevel = null;
+  let selectedFactors = new Set();
+  let countdownInterval = null;
+
+  function selectPressure(btn) {
+    document.querySelectorAll('.pressure-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedLevel = parseInt(btn.dataset.level);
+    document.getElementById('calcBtn').disabled = false;
+  }
+
+  function toggleFactor(btn) {
+    btn.classList.toggle('selected');
+    const f = btn.dataset.factor;
+    if (selectedFactors.has(f)) selectedFactors.delete(f);
+    else selectedFactors.add(f);
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // SCIENCE-BASED TIME ESTIMATES (seconds until involuntary loss)
+  //
+  // KEY INSIGHT: "need to poop" ≠ "will involuntarily poop"
+  //
+  // The internal anal sphincter (IAS) provides ~70-85% of resting
+  // anal tone and is INVOLUNTARY — it holds automatically.
+  // The external anal sphincter (EAS) is voluntary backup.
+  //
+  // You only lose control when:
+  //  a) Rectal pressure exceeds sphincter closing pressure, OR
+  //  b) EAS fatigues after sustained max contraction (~3.3 min), AND
+  //  c) An intra-abdominal pressure spike (cough, movement) occurs
+  //
+  // At low-to-moderate pressure, the IAS handles everything.
+  // You could defer for HOURS. It's only at high rectal volumes
+  // (>300mL) with active HAPCs that things get dangerous.
+  // ═══════════════════════════════════════════════════════════════
+
+  const baseTimes = {
+    1: { min: 4 * 3600, max: 8 * 3600 },    // 4-8 hours — IAS on autopilot
+    2: { min: 90 * 60, max: 4 * 3600 },      // 1.5-4 hours — easy deferral
+    3: { min: 15 * 60, max: 60 * 60 },       // 15-60 min — clench-defer cycles
+    4: { min: 5 * 60, max: 15 * 60 },        // 5-15 min — EAS fatigue zone
+    5: { min: 60, max: 5 * 60 }              // 1-5 min — failure imminent
+  };
+
+  // ═══════════════════════════════════════════════════════════════
+  // FACTOR ADJUSTMENTS
+  //
+  // These affect HOW FAST pressure escalates, not sphincter strength.
+  // Coffee doesn't weaken your sphincter — it increases colonic
+  // motility, pushing more stool toward the rectum faster.
+  //
+  // The biggest factor by far is stool consistency: liquid stool
+  // is dramatically harder to contain than formed stool.
+  // ═══════════════════════════════════════════════════════════════
+
+  const factorEffects = {
+    coffee:   { mult: 0.80, desc: "Increases rectosigmoid motility within 4 min, lasting 30+ min. Effect comparable to eating a meal. Affects ~29% of people. (Brown et al. 1990, Gut 31:450-453; Rao et al. 1998)" },
+    spicy:    { mult: 0.88, desc: "Capsaicin activates TRPV1 receptors in rectal mucosa, increasing sensitivity and lowering the volume threshold that triggers urgency. (Akbar et al. 2003, Lancet 361:385-391)" },
+    dairy:    { mult: 0.75, desc: "Lactose malabsorption (affects ~68% of adults globally) causes osmotic diarrhea. Loose stool is far harder for the sphincter to contain. (Global epidemiology data)" },
+    diarrhea: { mult: 0.60, desc: "THE single biggest risk factor. Loose/liquid stool is dramatically harder for sphincter muscles to hold. Cleveland Clinic lists diarrhea as the #1 cause of fecal incontinence." },
+    anxiety:  { mult: 0.82, desc: "Corticotropin-releasing factor (CRF) from stress increases colonic motility via the gut-brain axis. Well-documented in IBS research." },
+    meal:     { mult: 0.85, desc: "Gastrocolic reflex peaks 15-30 min after eating. Increases high-amplitude propagating contractions. Larger meals = stronger effect. (Rao 1998)" }
+  };
+
+  const scienceData = {
+    1: [
+      {
+        title: "🔬 Why You Have Hours",
+        text: "At low rectal distension, your internal anal sphincter (IAS) maintains continence completely automatically — it provides 70-85% of your resting anal canal pressure and stays contracted without any conscious effort. The external sphincter isn't even engaged. A healthy person at this level isn't anywhere near losing control; the body is simply sending an early advisory signal.",
+        ref: "Rao, S.S. (2004). Pathophysiology of adult fecal incontinence. Gastroenterology."
+      }
+    ],
+    2: [
+      {
+        title: "🔬 The Sampling Reflex",
+        text: "Your rectoanal inhibitory reflex (RAIR) is periodically relaxing the internal sphincter to 'sample' whether contents are gas or stool — this is what that intermittent sensation is. The external sphincter compensates easily and automatically. Clinical scales define 'mild urgency' as being able to defer 15+ minutes, but that threshold is for patients with bowel disorders. A healthy person at moderate pressure can typically defer for 1-4+ hours.",
+        ref: "Caron et al. (2023). Clin Gastroenterol Hepatol — Fecal urgency deferral time scales."
+      }
+    ],
+    3: [
+      {
+        title: "🔬 The Clench-and-Defer Cycle",
+        text: "Stool has reached the anal canal, and you're now actively using the external sphincter. A sustained pelvic floor contraction (60-90 seconds, focused on the rectum not the glutes) triggers reverse signaling via the RAIR, temporarily moving stool back into the rectum. This buys roughly 10 minutes before the next wave. You can repeat this cycle many times, but each wave tends to be stronger as the colon continues to propagate contents downward.",
+        ref: "Rao et al. (2015). ANMS-ESNM biofeedback guidelines. Neurogastroenterol & Motility 27(5):594-609."
+      },
+      {
+        title: "⏱️ The 10-Minute Window",
+        text: "Pelvic floor therapists describe the clench-and-defer as buying 'about 10 minutes MAX' before the colon pushes stool back into the sensitive zone. Unlike bladder urgency (which you can sometimes postpone indefinitely), bowel urgency should always be honored — the colon will keep pushing.",
+        ref: "PelvicFloored.com — clinical pelvic floor rehabilitation guidelines."
+      }
+    ],
+    4: [
+      {
+        title: "🔬 Sphincter Fatigue — The 3.3 Minute Clock",
+        text: "In a key study, the external anal sphincter's fatigue rate index was measured at approximately 3.3 minutes in healthy volunteers — meaning during SUSTAINED maximum voluntary contraction, the muscle loses significant force within this window. You can release, briefly rest (~10 sec), and re-engage, but each cycle produces less force. Incontinent patients had a fatigue rate index of only 1.5 minutes.",
+        ref: "Fernandez-Fraga et al. (1998). Dis Colon Rectum 41(4):423-427 — Fatigue rate index of the external sphincter."
+      },
+      {
+        title: "⚡ High-Amplitude Propagating Contractions",
+        text: "Your colon produces 6-8 high-amplitude propagating contractions (HAPCs) per day — powerful peristaltic waves that are virtually unstoppable once initiated. If one hits while your external sphincter is already fatigued, the pressure differential can overcome your closing force. HAPCs are associated with mass movement and the defecation reflex.",
+        ref: "Bassotti et al. (2003). World J Gastroenterol 9:2791-2796."
+      }
+    ],
+    5: [
+      {
+        title: "🔬 The Physics of Failure",
+        text: "Normal sphincter closing pressure is 40-70 mmHg at max effort, but yours is fatigued and likely producing well below peak. Meanwhile, a single cough generates 100+ mmHg of intra-abdominal pressure, a laugh generates 60-80 mmHg, and even walking creates rhythmic pressure spikes. When abdominal pressure exceeds sphincter pressure, continence fails. It's simple mechanical engineering at this point.",
+        ref: "Rao & Patel (1997). Gastroenterology — Defecation disorders: neuromuscular mechanisms."
+      },
+      {
+        title: "🚨 Clinical Urgency Data",
+        text: "In studies of patients with fecal urgency, 28-54% reported deferral times of less than 5 minutes, and some reported times under 30 seconds. Clinical scales rate the most severe urgency as 'sometimes unable to make it to the bathroom at all.' At DEFCON 1, you're experiencing what those patients experience — except hopefully temporarily.",
+        ref: "Caron et al. (2023). Clin Gastroenterol Hepatol — Deferral time data across 26 studies."
+      }
+    ]
+  };
+
+  const threatNames = {
+    1: "GREEN — YOU'RE FINE",
+    2: "YELLOW — ELEVATED AWARENESS",
+    3: "ORANGE — ACTIVE MANAGEMENT REQUIRED",
+    4: "RED — CRITICAL",
+    5: "BROWN — IMMINENT FAILURE"
+  };
+
+  const threatColors = {
+    1: "#7cb305",
+    2: "#a0d911",
+    3: "#faad14",
+    4: "#d4380d",
+    5: "#8B4513"
+  };
+
+  const verdicts = {
+    1: "Your internal sphincter has this handled. You have hours. Go about your day — just don't ignore it forever.",
+    2: "Comfortable deferral window. Your sphincter is mostly on autopilot. Plan to find a restroom in the next hour or two.",
+    3: "Active management phase. Each clench-and-defer cycle buys ~10 min. Start moving toward a restroom between waves.",
+    4: "External sphincter fatigue is now the limiting factor. Each max clench loses force after ~3 min. Move NOW.",
+    5: "Any cough, laugh, or stumble could exceed your sphincter's remaining closing pressure. Every second counts."
+  };
+
+  const tipsByLevel = {
+    1: [
+      { icon: "✅", text: "You're not in danger. The internal anal sphincter handles this automatically without conscious effort." },
+      { icon: "🗺️", text: "Make a mental note of the nearest restroom. There's no rush — you have a very long window." },
+      { icon: "🚫", text: "The main risk is ignoring it so long that pressure escalates. Go when it's convenient." }
+    ],
+    2: [
+      { icon: "📍", text: "Plan to use a restroom within the next hour or so. No emergency, just good practice." },
+      { icon: "☕", text: "Avoid additional coffee or large meals — the gastrocolic reflex will compound pressure over 15-30 min." },
+      { icon: "🧘", text: "Stay relaxed. Stress increases colonic motility via CRF and the gut-brain axis." }
+    ],
+    3: [
+      { icon: "💪", text: "Use the Long Hold: clench your pelvic floor (not your glutes!) for 60-90 sec to trigger reverse peristalsis and buy ~10 min." },
+      { icon: "🚶", text: "Between urgency waves, walk calmly but purposefully to the nearest restroom. Small, controlled steps." },
+      { icon: "⏰", text: "Each clench cycle gets weaker. Don't waste the window — the colon will keep pushing." }
+    ],
+    4: [
+      { icon: "🚨", text: "DROP EVERYTHING. Your sphincter fatigues to half-force in ~3 min of sustained clenching." },
+      { icon: "🤐", text: "Avoid talking, laughing, or coughing — any spike in abdominal pressure could breach sphincter capacity." },
+      { icon: "🧊", text: "Short micro-releases (1-2 sec) between clenches let muscle fibers recover partially. Don't hold max the entire time." }
+    ],
+    5: [
+      { icon: "🏃", text: "If you can see a restroom, go NOW. If not, you need any private space immediately." },
+      { icon: "⚠️", text: "DO NOT TRUST ANY FART. At this pressure, the sampling reflex cannot reliably distinguish gas from catastrophe." },
+      { icon: "🙏", text: "Avoid ALL sudden movements. A cough or sneeze generates 100+ mmHg — your sphincter may be at 20-30 mmHg right now." }
+    ]
+  };
+
+  function formatTime(seconds) {
+    if (seconds >= 7200) {
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      return { display: `${h}:${String(m).padStart(2, '0')}`, unit: "HR:MIN" };
+    } else if (seconds >= 60) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return { display: `${m}:${String(s).padStart(2, '0')}`, unit: "MIN:SEC" };
+    } else {
+      return { display: `${seconds}`, unit: "SECONDS" };
+    }
+  }
+
+  function formatRange(minSec, maxSec) {
+    function friendly(s) {
+      if (s >= 3600) {
+        const h = Math.round(s / 3600 * 10) / 10;
+        return h === 1 ? "1 hour" : `${h} hours`;
+      }
+      const m = Math.round(s / 60);
+      return m === 1 ? "1 minute" : `${m} minutes`;
+    }
+    return `Estimated range: ${friendly(minSec)} – ${friendly(maxSec)}`;
+  }
+
+  function calculate() {
+    const base = baseTimes[selectedLevel];
+    let minTime = base.min;
+    let maxTime = base.max;
+
+    selectedFactors.forEach(f => {
+      minTime *= factorEffects[f].mult;
+      maxTime *= factorEffects[f].mult;
+    });
+
+    minTime = Math.max(10, Math.round(minTime));
+    maxTime = Math.max(20, Math.round(maxTime));
+
+    const midpoint = minTime + (maxTime - minTime) * (0.35 + Math.random() * 0.3);
+    let totalSeconds = Math.round(midpoint);
+
+    document.getElementById('inputSection').classList.add('hidden');
+    const results = document.getElementById('results');
+    results.classList.add('show');
+
+    const color = threatColors[selectedLevel];
+    document.getElementById('threatLabel').textContent = `THREAT LEVEL: ${threatNames[selectedLevel]}`;
+    document.getElementById('threatLabel').style.color = color;
+
+    document.getElementById('verdictText').textContent = verdicts[selectedLevel];
+    document.getElementById('rangeNote').textContent = formatRange(minTime, maxTime);
+
+    // Science boxes
+    const scienceContainer = document.getElementById('scienceBoxes');
+    scienceContainer.innerHTML = '';
+    scienceData[selectedLevel].forEach(sci => {
+      scienceContainer.innerHTML += `
+        <div class="science-box">
+          <h3>${sci.title}</h3>
+          <p>${sci.text}</p>
+          <span class="ref">${sci.ref}</span>
+        </div>`;
+    });
+
+    if (selectedFactors.size > 0) {
+      let factorHtml = `<div class="science-box"><h3>📉 Factor Adjustments Applied</h3><p>`;
+      const descs = [];
+      selectedFactors.forEach(f => {
+        const pct = Math.round((1 - factorEffects[f].mult) * 100);
+        descs.push(`<strong>−${pct}% time</strong>: ${factorEffects[f].desc}`);
+      });
+      factorHtml += descs.join('<br><br>') + `</p></div>`;
+      scienceContainer.innerHTML += factorHtml;
+    }
+
+    // Methodology
+    document.getElementById('methodText').innerHTML = `
+      <strong>Base estimates</strong> derived from: EAS fatigue rate index (~3.3 min sustained max contraction in healthy volunteers; 
+      Fernandez-Fraga 1998), clinical fecal urgency deferral time scales (15-min threshold for clinical urgency; Caron 2023),
+      pelvic floor clench-and-defer cycle duration (~10 min per cycle), and the critical distinction between passive continence 
+      (internal sphincter, automatic, provides 70-85% of resting tone) vs. active continence (external sphincter, voluntary, fatigable).<br><br>
+      <strong>Factor adjustments</strong> based on: coffee's effect on rectosigmoid motility (Brown 1990: onset within 4 min, 
+      lasting 30+ min, BUT only increases motility — doesn't weaken the sphincter itself), capsaicin TRPV1 receptor activation 
+      (Akbar 2003), stool consistency as the dominant variable in continence mechanics (Cleveland Clinic), 
+      and CRF-mediated gut-brain axis effects.<br><br>
+      <strong>Key caveat:</strong> Individual variation is enormous. These are rough central estimates for a healthy adult.
+      Age, pelvic floor strength, stool consistency, IBS/IBD, prior injuries, and even your body position all matter.
+    `;
+
+    // Tips
+    const tipsContainer = document.getElementById('tipsContainer');
+    tipsContainer.innerHTML = '';
+    tipsByLevel[selectedLevel].forEach(tip => {
+      tipsContainer.innerHTML += `<div class="tip-item"><span class="tip-icon">${tip.icon}</span><span>${tip.text}</span></div>`;
+    });
+
+    startCountdown(totalSeconds, color, selectedLevel);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function startCountdown(totalSeconds, color, level) {
+    let remaining = totalSeconds;
+    const circle = document.getElementById('progressCircle');
+    const display = document.getElementById('timerDisplay');
+    const unit = document.getElementById('timerUnit');
+    const circumference = 2 * Math.PI * 88;
+
+    circle.style.stroke = color;
+
+    function update() {
+      if (remaining <= 0) {
+        clearInterval(countdownInterval);
+        display.textContent = "💀";
+        unit.textContent = "TOO LATE";
+        display.parentElement.classList.add('shake');
+        circle.style.strokeDashoffset = circumference;
+        return;
+      }
+
+      const progress = 1 - (remaining / totalSeconds);
+      circle.style.strokeDashoffset = circumference * (1 - progress);
+
+      const pctLeft = remaining / totalSeconds;
+      if (pctLeft < 0.15) {
+        circle.style.stroke = '#d4380d';
+        display.parentElement.classList.add('pulse');
+      } else if (pctLeft < 0.35 && level >= 3) {
+        circle.style.stroke = '#fa8c16';
+      }
+
+      const fmt = formatTime(remaining);
+      display.textContent = fmt.display;
+      unit.textContent = fmt.unit;
+
+      remaining--;
+    }
+
+    update();
+    countdownInterval = setInterval(update, 1000);
+  }
+
+  function reset() {
+    clearInterval(countdownInterval);
+    selectedLevel = null;
+    selectedFactors.clear();
+    document.querySelectorAll('.pressure-btn, .factor-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('calcBtn').disabled = true;
+    document.getElementById('results').classList.remove('show');
+    document.getElementById('inputSection').classList.remove('hidden');
+    document.getElementById('timerDisplay').parentElement.classList.remove('pulse', 'shake');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
