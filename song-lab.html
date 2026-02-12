@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SONIC LAB // Frequency Dissector</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --cyan: #00f0ff;
+  --magenta: #ff00e5;
+  --yellow: #f0ff00;
+  --green: #00ff88;
+  --red: #ff3355;
+  --orange: #ff8800;
+  --bg-deep: #0a0a0f;
+  --bg-panel: #0d0d18;
+  --bg-card: #111122;
+  --border: #1a1a3a;
+  --text: #c8c8e0;
+  --text-dim: #6a6a8a;
+  --glow-cyan: 0 0 20px rgba(0,240,255,0.3);
+  --glow-magenta: 0 0 20px rgba(255,0,229,0.3);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-deep);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: 
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,240,255,0.015) 2px, rgba(0,240,255,0.015) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255,0,229,0.01) 50px, rgba(255,0,229,0.01) 51px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.scanline {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity: 0.15;
+  animation: scanline 6s linear infinite;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@keyframes scanline {
+  0% { top: -4px; }
+  100% { top: 100vh; }
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* HEADER */
+.header {
+  text-align: center;
+  padding: 60px 20px 40px;
+  position: relative;
+}
+
+.header h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  background: linear-gradient(135deg, var(--cyan), var(--magenta), var(--cyan));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 4s ease infinite;
+  text-shadow: none;
+  filter: drop-shadow(0 0 30px rgba(0,240,255,0.3));
+  position: relative;
+}
+
+.header h1::after {
+  content: 'SONIC LAB';
+  position: absolute;
+  top: 2px; left: 2px;
+  background: linear-gradient(135deg, var(--magenta), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.3;
+  z-index: -1;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.header .subtitle {
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  letter-spacing: 0.4em;
+  margin-top: 10px;
+  text-transform: uppercase;
+}
+
+.header .version {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 3px 12px;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  opacity: 0.6;
+}
+
+/* UPLOAD ZONE */
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: 4px;
+  padding: 60px 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  margin: 20px 0 40px;
+  background: linear-gradient(135deg, rgba(0,240,255,0.02), rgba(255,0,229,0.02));
+}
+
+.upload-zone:hover {
+  border-color: var(--cyan);
+  box-shadow: var(--glow-cyan), inset 0 0 60px rgba(0,240,255,0.03);
+}
+
+.upload-zone.dragging {
+  border-color: var(--magenta);
+  box-shadow: var(--glow-magenta), inset 0 0 80px rgba(255,0,229,0.05);
+}
+
+.upload-zone.has-file {
+  border-color: var(--green);
+  border-style: solid;
+}
+
+.upload-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.upload-zone h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: var(--cyan);
+  margin-bottom: 8px;
+}
+
+.upload-zone p {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+.upload-zone input[type="file"] {
+  display: none;
+}
+
+/* LOADING / ANALYZING */
+.analyzer-status {
+  text-align: center;
+  padding: 40px;
+}
+
+.analyzer-status .spinner {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+  border: 3px solid var(--border);
+  border-top-color: var(--cyan);
+  border-right-color: var(--magenta);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.analyzer-status p {
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--cyan);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  animation: blink 1.5s ease infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* PLAYER BAR */
+.player-bar {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.play-btn {
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--cyan);
+  background: transparent;
+  border-radius: 50%;
+  color: var(--cyan);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.play-btn:hover {
+  background: var(--cyan);
+  color: var(--bg-deep);
+  box-shadow: var(--glow-cyan);
+}
+
+.track-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.track-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  color: var(--cyan);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-meta {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.waveform-mini {
+  flex: 2;
+  height: 40px;
+  background: var(--bg-deep);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.waveform-mini canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* SECTIONS */
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  color: var(--magenta);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title .tag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border: 1px solid var(--magenta);
+  color: var(--magenta);
+  opacity: 0.7;
+}
+
+/* GRID */
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  border-color: rgba(0,240,255,0.3);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--magenta));
+  opacity: 0.6;
+}
+
+.card-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.card-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--cyan);
+}
+
+.card-value.magenta { color: var(--magenta); }
+.card-value.green { color: var(--green); }
+.card-value.yellow { color: var(--yellow); }
+.card-value.orange { color: var(--orange); }
+
+.card-detail {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+/* SPECTRUM BAR */
+.spectrum-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 12px 0 6px;
+  gap: 2px;
+}
+
+.spectrum-bar div {
+  flex: 1;
+  border-radius: 2px;
+  transition: all 0.5s;
+}
+
+.spectrum-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.55rem;
+  color: var(--text-dim);
+}
+
+/* CANVAS */
+.viz-canvas {
+  width: 100%;
+  height: 200px;
+  background: var(--bg-deep);
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  margin-top: 12px;
+}
+
+/* CHARACTERISTICS TAGS */
+.char-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.char-tag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  padding: 4px 12px;
+  border: 1px solid;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.3s;
+  user-select: none;
+}
+
+.char-tag:hover {
+  transform: translateY(-1px);
+}
+
+.char-tag.cyan { border-color: var(--cyan); color: var(--cyan); }
+.char-tag.cyan:hover, .char-tag.cyan.active { background: var(--cyan); color: var(--bg-deep); }
+.char-tag.magenta { border-color: var(--magenta); color: var(--magenta); }
+.char-tag.magenta:hover, .char-tag.magenta.active { background: var(--magenta); color: var(--bg-deep); }
+.char-tag.green { border-color: var(--green); color: var(--green); }
+.char-tag.green:hover, .char-tag.green.active { background: var(--green); color: var(--bg-deep); }
+.char-tag.yellow { border-color: var(--yellow); color: var(--yellow); }
+.char-tag.yellow:hover, .char-tag.yellow.active { background: var(--yellow); color: var(--bg-deep); }
+.char-tag.orange { border-color: var(--orange); color: var(--orange); }
+.char-tag.orange:hover, .char-tag.orange.active { background: var(--orange); color: var(--bg-deep); }
+
+/* FILTER CONTROLS */
+.filter-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.filter-group label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.filter-group select, .filter-group input[type="range"] {
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  padding: 6px 10px;
+  border-radius: 2px;
+  outline: none;
+  min-width: 140px;
+}
+
+.filter-group select:focus {
+  border-color: var(--cyan);
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+  width: 140px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--cyan);
+  cursor: pointer;
+  box-shadow: var(--glow-cyan);
+}
+
+/* SUGGESTION CARDS */
+.suggestion-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 24px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s;
+  cursor: default;
+}
+
+.suggestion-card:hover {
+  border-color: var(--cyan);
+  box-shadow: inset 0 0 40px rgba(0,240,255,0.02);
+  transform: translateX(4px);
+}
+
+.suggestion-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+}
+
+.suggestion-card.match-high::before { background: var(--green); }
+.suggestion-card.match-mid::before { background: var(--yellow); }
+.suggestion-card.match-low::before { background: var(--orange); }
+
+.suggestion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.suggestion-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.95rem;
+  color: #fff;
+  letter-spacing: 0.05em;
+}
+
+.suggestion-artist {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.match-pct {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.match-pct.high { color: var(--green); }
+.match-pct.mid { color: var(--yellow); }
+.match-pct.low { color: var(--orange); }
+
+.match-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.55rem;
+  color: var(--text-dim);
+  text-align: right;
+}
+
+.match-reasons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.match-reason {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border-radius: 2px;
+  background: rgba(0,240,255,0.08);
+  color: var(--cyan);
+  border: 1px solid rgba(0,240,255,0.15);
+}
+
+.suggestion-explanation {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.6;
+  padding: 12px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 2px;
+  border-left: 2px solid var(--border);
+}
+
+.suggestion-explanation strong {
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+/* METER */
+.meter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0;
+}
+
+.meter-row .meter-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  width: 80px;
+  text-align: right;
+}
+
+.meter-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-deep);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.meter-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1s ease;
+}
+
+.meter-val {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  width: 30px;
+}
+
+/* DNA STRAND */
+.dna-strand {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin: 16px 0;
+  justify-content: center;
+}
+
+.dna-node {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.dna-node:hover {
+  transform: scale(2);
+  box-shadow: 0 0 10px currentColor;
+}
+
+/* FULL WIDTH CARD */
+.full-card {
+  grid-column: 1 / -1;
+}
+
+/* HIDDEN */
+.hidden { display: none !important; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .analysis-grid { grid-template-columns: 1fr; }
+  .player-bar { flex-wrap: wrap; }
+  .waveform-mini { flex-basis: 100%; order: 3; }
+  .filter-row { flex-direction: column; }
+}
+
+/* FADE IN */
+.fade-in {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stagger-1 { animation-delay: 0.1s; opacity: 0; }
+.stagger-2 { animation-delay: 0.2s; opacity: 0; }
+.stagger-3 { animation-delay: 0.3s; opacity: 0; }
+.stagger-4 { animation-delay: 0.4s; opacity: 0; }
+.stagger-5 { animation-delay: 0.5s; opacity: 0; }
+.stagger-6 { animation-delay: 0.6s; opacity: 0; }
+
+/* NEW FILE BTN */
+.new-file-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  padding: 6px 14px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.3s;
+  letter-spacing: 0.05em;
+}
+
+.new-file-btn:hover {
+  border-color: var(--magenta);
+  color: var(--magenta);
+}
+
+/* Toggle switch */
+.toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toggle {
+  width: 36px;
+  height: 18px;
+  background: var(--border);
+  border-radius: 9px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.toggle.active {
+  background: var(--cyan);
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+}
+
+.toggle.active::after {
+  transform: translateX(18px);
+}
+
+.toggle-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<div class="container" id="app"></div>
+
+<script>
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+
+const SONIC_DB = {
+  genres: {
+    'dark-ambient': { label: 'Dark Ambient', color: '#6633aa' },
+    'industrial-techno': { label: 'Industrial Techno', color: '#ff3355' },
+    'acid-house': { label: 'Acid House', color: '#f0ff00' },
+    'breakcore': { label: 'Breakcore', color: '#ff8800' },
+    'dub-techno': { label: 'Dub Techno', color: '#00ff88' },
+    'drone': { label: 'Drone', color: '#8844cc' },
+    'idm': { label: 'IDM', color: '#00f0ff' },
+    'jungle': { label: 'Jungle', color: '#ff6600' },
+    'lo-fi-house': { label: 'Lo-Fi House', color: '#ffaa00' },
+    'vaporwave': { label: 'Vaporwave', color: '#ff77cc' },
+    'witch-house': { label: 'Witch House', color: '#9933ff' },
+    'gabber': { label: 'Gabber', color: '#ff0033' },
+    'trip-hop': { label: 'Trip Hop', color: '#4488aa' },
+    'psytrance': { label: 'Psytrance', color: '#00ff00' },
+    'noise': { label: 'Noise', color: '#999999' },
+    'footwork': { label: 'Footwork', color: '#ff4400' },
+    'uk-garage': { label: 'UK Garage', color: '#ffcc00' },
+    'electro': { label: 'Electro', color: '#0088ff' },
+    'minimal-wave': { label: 'Minimal Wave / Synth', color: '#cc88ff' },
+    'shoegaze-electronic': { label: 'Shoegaze-Electronic', color: '#ff88aa' },
+    'post-punk-electronic': { label: 'Post-Punk Electronic', color: '#aaaacc' },
+    'deconstructed-club': { label: 'Deconstructed Club', color: '#ff00e5' },
+  },
+
+  trackDB: [
+    { title: "Collapsed Infrastructure", artist: "SHXCXCHCXSH", genre: "industrial-techno", bpm: 132, key: "Dm", energy: 0.85, darkness: 0.9, texture: 0.7, space: 0.3, experimentalism: 0.75, rhythmComplexity: 0.6, tags: ["distorted kicks", "metallic textures", "relentless groove", "warehouse reverb"] },
+    { title: "Acid Rain Protocol", artist: "Legowelt", genre: "acid-house", bpm: 126, key: "Am", energy: 0.7, darkness: 0.4, texture: 0.6, space: 0.5, experimentalism: 0.5, rhythmComplexity: 0.4, tags: ["303 squelch", "warm pads", "analog hiss", "hypnotic bassline"] },
+    { title: "Negative Headspace", artist: "Author & Punisher", genre: "industrial-techno", bpm: 110, key: "Cm", energy: 0.9, darkness: 0.95, texture: 0.9, space: 0.2, experimentalism: 0.85, rhythmComplexity: 0.5, tags: ["crushing sub-bass", "machine noise", "oppressive atmosphere", "slow grind"] },
+    { title: "Fracture Point", artist: "Venetian Snares", genre: "breakcore", bpm: 172, key: "F#m", energy: 0.95, darkness: 0.6, texture: 0.5, space: 0.3, experimentalism: 0.95, rhythmComplexity: 0.98, tags: ["amen breaks", "time signature chaos", "granular edits", "classical samples"] },
+    { title: "Submersion Dub", artist: "Deepchord", genre: "dub-techno", bpm: 122, key: "Em", energy: 0.3, darkness: 0.5, texture: 0.8, space: 0.95, experimentalism: 0.4, rhythmComplexity: 0.3, tags: ["dub delays", "deep chords", "hiss crackle", "subaquatic pads"] },
+    { title: "Static Meditation", artist: "Lustmord", genre: "dark-ambient", bpm: 0, key: "N/A", energy: 0.1, darkness: 0.98, texture: 0.9, space: 0.9, experimentalism: 0.7, rhythmComplexity: 0.05, tags: ["field recordings", "sub frequencies", "cavernous reverb", "glacial movement"] },
+    { title: "Pattern Recognition", artist: "Autechre", genre: "idm", bpm: 138, key: "Atonal", energy: 0.5, darkness: 0.6, texture: 0.7, space: 0.6, experimentalism: 0.98, rhythmComplexity: 0.95, tags: ["generative rhythms", "glitch synthesis", "algorithmic", "anti-structure"] },
+    { title: "Ragga Warfare", artist: "DJ Krust", genre: "jungle", bpm: 168, key: "Gm", energy: 0.88, darkness: 0.5, texture: 0.4, space: 0.4, experimentalism: 0.5, rhythmComplexity: 0.85, tags: ["chopped breaks", "sub bass", "ragga vocals", "reese bass"] },
+    { title: "Mall Dreams", artist: "Blank Banshee", genre: "vaporwave", bpm: 90, key: "Eb", energy: 0.3, darkness: 0.3, texture: 0.5, space: 0.7, experimentalism: 0.5, rhythmComplexity: 0.3, tags: ["pitched-down samples", "reverb wash", "nostalgia", "chopped vocals"] },
+    { title: "Hex Transmission", artist: "oOoOO", genre: "witch-house", bpm: 85, key: "Bbm", energy: 0.4, darkness: 0.85, texture: 0.7, space: 0.7, experimentalism: 0.6, rhythmComplexity: 0.3, tags: ["pitch-shifted vocals", "trap hi-hats", "occult atmosphere", "slowed down"] },
+    { title: "160 Demolition", artist: "Hellfish", genre: "gabber", bpm: 190, key: "N/A", energy: 0.99, darkness: 0.7, texture: 0.3, space: 0.1, experimentalism: 0.4, rhythmComplexity: 0.5, tags: ["distorted kick", "extreme tempo", "aggressive stabs", "no mercy"] },
+    { title: "Midnight Cruiser", artist: "Massive Attack", genre: "trip-hop", bpm: 88, key: "Dm", energy: 0.35, darkness: 0.6, texture: 0.7, space: 0.8, experimentalism: 0.4, rhythmComplexity: 0.35, tags: ["cinematic strings", "slow breakbeat", "moody bass", "whispered vocals"] },
+    { title: "Spiral Ascension", artist: "Infected Mushroom", genre: "psytrance", bpm: 145, key: "Am", energy: 0.85, darkness: 0.3, texture: 0.5, space: 0.4, experimentalism: 0.6, rhythmComplexity: 0.55, tags: ["rolling bassline", "psychedelic FX", "build-drop structure", "acid lines"] },
+    { title: "Residual Frequency", artist: "Merzbow", genre: "noise", bpm: 0, key: "N/A", energy: 0.8, darkness: 0.7, texture: 0.95, space: 0.2, experimentalism: 0.99, rhythmComplexity: 0.1, tags: ["pure feedback", "white noise walls", "frequency assault", "anti-music"] },
+    { title: "Tek Bounce", artist: "DJ Rashad", genre: "footwork", bpm: 160, key: "Cm", energy: 0.8, darkness: 0.3, texture: 0.3, space: 0.5, experimentalism: 0.6, rhythmComplexity: 0.9, tags: ["juke rhythms", "vocal chops", "syncopated kicks", "polyrhythmic"] },
+    { title: "Midnight Request", artist: "El-B", genre: "uk-garage", bpm: 130, key: "Fm", energy: 0.6, darkness: 0.45, texture: 0.5, space: 0.6, experimentalism: 0.4, rhythmComplexity: 0.6, tags: ["2-step groove", "deep bass", "pitched vocals", "shuffled hats"] },
+    { title: "Machine Funk 001", artist: "Drexciya", genre: "electro", bpm: 125, key: "Em", energy: 0.7, darkness: 0.5, texture: 0.5, space: 0.5, experimentalism: 0.65, rhythmComplexity: 0.6, tags: ["TR-808 drums", "vocoders", "afrofuturist", "robotic funk"] },
+    { title: "Cold Transmission", artist: "Lebanon Hanover", genre: "minimal-wave", bpm: 115, key: "Am", energy: 0.5, darkness: 0.75, texture: 0.6, space: 0.6, experimentalism: 0.45, rhythmComplexity: 0.3, tags: ["analog synths", "cold vocals", "post-punk bass", "minimal drums"] },
+    { title: "Dissolved Boundaries", artist: "Have A Nice Life", genre: "shoegaze-electronic", bpm: 105, key: "Dm", energy: 0.55, darkness: 0.8, texture: 0.85, space: 0.8, experimentalism: 0.6, rhythmComplexity: 0.3, tags: ["wall of sound", "distorted reverb", "buried vocals", "feedback drones"] },
+    { title: "Nerve Cluster", artist: "Arca", genre: "deconstructed-club", bpm: 140, key: "Atonal", energy: 0.7, darkness: 0.65, texture: 0.8, space: 0.5, experimentalism: 0.95, rhythmComplexity: 0.8, tags: ["glitched percussion", "pitch-bent synths", "gender-fluid vocals", "shapeshifting"] },
+    { title: "Dusty Groove Loop", artist: "DJ Boring", genre: "lo-fi-house", bpm: 120, key: "G", energy: 0.5, darkness: 0.2, texture: 0.6, space: 0.5, experimentalism: 0.3, rhythmComplexity: 0.35, tags: ["vinyl crackle", "warm chords", "simple groove", "nostalgic samples"] },
+    { title: "Phase Gate", artist: "Andy Stott", genre: "dub-techno", bpm: 100, key: "Fm", energy: 0.4, darkness: 0.8, texture: 0.85, space: 0.7, experimentalism: 0.7, rhythmComplexity: 0.4, tags: ["cavernous reverb", "ghostly vocals", "sub pressure", "disintegrated beats"] },
+    { title: "Sustained Oscillation", artist: "Sunn O)))", genre: "drone", bpm: 0, key: "D", energy: 0.3, darkness: 0.9, texture: 0.95, space: 0.6, experimentalism: 0.8, rhythmComplexity: 0.02, tags: ["guitar drones", "massive amplification", "ritual pace", "tectonic vibration"] },
+    { title: "Synaptic Misfire", artist: "Squarepusher", genre: "idm", bpm: 155, key: "Bbm", energy: 0.75, darkness: 0.4, texture: 0.5, space: 0.4, experimentalism: 0.9, rhythmComplexity: 0.92, tags: ["jazz-inflected bass", "breakneck edits", "funky glitch", "virtuosic programming"] },
+    { title: "Hollow Earth", artist: "Burial", genre: "uk-garage", bpm: 130, key: "Cm", energy: 0.35, darkness: 0.8, texture: 0.75, space: 0.85, experimentalism: 0.65, rhythmComplexity: 0.5, tags: ["vinyl rain", "ghostly vocals", "2-step skeleton", "urban melancholy"] },
+    { title: "Chrome Interface", artist: "Perturbator", genre: "electro", bpm: 118, key: "Dm", energy: 0.8, darkness: 0.65, texture: 0.5, space: 0.3, experimentalism: 0.35, rhythmComplexity: 0.4, tags: ["synthwave bass", "retro arpeggios", "cyberpunk aesthetic", "driving pulse"] },
+    { title: "Thermal Inversion", artist: "Rabit", genre: "deconstructed-club", bpm: 135, key: "Atonal", energy: 0.65, darkness: 0.75, texture: 0.7, space: 0.55, experimentalism: 0.88, rhythmComplexity: 0.75, tags: ["shattered rhythms", "industrial textures", "disorienting FX", "post-club"] },
+    { title: "Subterranean Transit", artist: "Function", genre: "industrial-techno", bpm: 134, key: "Em", energy: 0.75, darkness: 0.8, texture: 0.65, space: 0.4, experimentalism: 0.55, rhythmComplexity: 0.55, tags: ["heavy kick", "filtered loops", "tunnel reverb", "hypnotic drive"] },
+  ]
+};
+
+const KEYS = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const NOTE_FREQS = {
+  'C': 261.63, 'C#': 277.18, 'D': 293.66, 'D#': 311.13,
+  'E': 329.63, 'F': 349.23, 'F#': 369.99, 'G': 392.00,
+  'G#': 415.30, 'A': 440.00, 'A#': 466.16, 'B': 493.88
+};
+
+class SonicAnalyzer {
+  constructor() {
+    this.audioCtx = null;
+    this.audioBuffer = null;
+    this.sourceNode = null;
+    this.isPlaying = false;
+    this.analysis = null;
+  }
+
+  async loadFile(file) {
+    this.audioCtx = new AudioCtx();
+    const arrayBuffer = await file.arrayBuffer();
+    this.audioBuffer = await this.audioCtx.decodeAudioData(arrayBuffer);
+    return this.audioBuffer;
+  }
+
+  analyze() {
+    const buf = this.audioBuffer;
+    const data = buf.getChannelData(0);
+    const sr = buf.sampleRate;
+    const duration = buf.duration;
+
+    const bpm = this.detectBPM(data, sr);
+    const key = this.detectKey(data, sr);
+    const spectrum = this.analyzeSpectrum(data, sr);
+    const energy = this.analyzeEnergy(data);
+    const dynamics = this.analyzeDynamics(data);
+    const texture = this.analyzeTexture(data, sr);
+    const space = this.analyzeSpace(data, sr);
+    const rhythmComplexity = this.analyzeRhythmComplexity(data, sr, bpm);
+    const darkness = this.analyzeDarkness(spectrum);
+    const experimentalism = this.analyzeExperimentalism(data, sr, bpm, spectrum);
+    const characteristics = this.deriveCharacteristics(bpm, key, energy, darkness, texture, space, rhythmComplexity, spectrum, experimentalism);
+    const waveformData = this.getWaveformData(data, 400);
+
+    this.analysis = {
+      duration, sampleRate: sr, bpm, key, spectrum, energy, dynamics,
+      texture, space, rhythmComplexity, darkness, experimentalism,
+      characteristics, waveformData,
+      channels: buf.numberOfChannels,
+      bitDepth: 16
+    };
+
+    return this.analysis;
+  }
+
+  detectBPM(data, sr) {
+    const segLen = Math.min(data.length, sr * 15);
+    const seg = data.slice(0, segLen);
+    const filtered = new Float32Array(segLen);
+
+    // Simple low-pass energy envelope
+    let env = 0;
+    const alpha = 0.001;
+    for (let i = 0; i < segLen; i++) {
+      env = env * (1 - alpha) + Math.abs(seg[i]) * alpha;
+      filtered[i] = env;
+    }
+
+    // Downsample envelope
+    const hop = Math.floor(sr / 200);
+    const envDown = [];
+    for (let i = 0; i < filtered.length; i += hop) {
+      envDown.push(filtered[i]);
+    }
+
+    // Autocorrelation on downsampled envelope
+    const dsRate = sr / hop;
+    const minLag = Math.floor(dsRate * 60 / 200); // 200 BPM
+    const maxLag = Math.floor(dsRate * 60 / 60);  // 60 BPM
+    let bestLag = minLag, bestCorr = -Infinity;
+
+    const mean = envDown.reduce((a, b) => a + b, 0) / envDown.length;
+    const centered = envDown.map(v => v - mean);
+
+    for (let lag = minLag; lag <= maxLag && lag < centered.length / 2; lag++) {
+      let corr = 0;
+      const n = Math.min(centered.length - lag, 2000);
+      for (let i = 0; i < n; i++) {
+        corr += centered[i] * centered[i + lag];
+      }
+      if (corr > bestCorr) {
+        bestCorr = corr;
+        bestLag = lag;
+      }
+    }
+
+    let bpm = Math.round(dsRate * 60 / bestLag);
+    if (bpm > 180) bpm = Math.round(bpm / 2);
+    if (bpm < 70) bpm = Math.round(bpm * 2);
+    return bpm;
+  }
+
+  detectKey(data, sr) {
+    const fftSize = 8192;
+    const segLen = Math.min(data.length, sr * 20);
+    const chromagram = new Float32Array(12).fill(0);
+
+    for (let offset = 0; offset + fftSize < segLen; offset += fftSize) {
+      const seg = data.slice(offset, offset + fftSize);
+      const windowed = new Float32Array(fftSize);
+      for (let i = 0; i < fftSize; i++) {
+        windowed[i] = seg[i] * (0.5 - 0.5 * Math.cos(2 * Math.PI * i / fftSize));
+      }
+
+      // Simple DFT at note frequencies (approximation)
+      for (let n = 0; n < 12; n++) {
+        for (let oct = 2; oct <= 6; oct++) {
+          const freq = NOTE_FREQS[KEYS[n]] * Math.pow(2, oct - 4);
+          const k = Math.round(freq * fftSize / sr);
+          if (k < fftSize / 2) {
+            let re = 0, im = 0;
+            for (let i = 0; i < fftSize; i++) {
+              const angle = 2 * Math.PI * k * i / fftSize;
+              re += windowed[i] * Math.cos(angle);
+              im -= windowed[i] * Math.sin(angle);
+            }
+            chromagram[n] += Math.sqrt(re * re + im * im);
+          }
+        }
+      }
+    }
+
+    // Normalize
+    const maxC = Math.max(...chromagram);
+    for (let i = 0; i < 12; i++) chromagram[i] /= maxC;
+
+    // Match major/minor profiles
+    const major = [1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1];
+    const minor = [1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0];
+    let bestKey = 'C', bestScore = -Infinity, isMinor = false;
+
+    for (let shift = 0; shift < 12; shift++) {
+      let majScore = 0, minScore = 0;
+      for (let i = 0; i < 12; i++) {
+        const idx = (i + shift) % 12;
+        majScore += chromagram[idx] * major[i];
+        minScore += chromagram[idx] * minor[i];
+      }
+      if (majScore > bestScore) { bestScore = majScore; bestKey = KEYS[shift]; isMinor = false; }
+      if (minScore > bestScore) { bestScore = minScore; bestKey = KEYS[shift]; isMinor = true; }
+    }
+
+    return bestKey + (isMinor ? 'm' : '');
+  }
+
+  analyzeSpectrum(data, sr) {
+    const fftSize = 4096;
+    const bands = { sub: 0, bass: 0, lowMid: 0, mid: 0, highMid: 0, high: 0 };
+    const bandRanges = { sub: [20, 60], bass: [60, 250], lowMid: [250, 500], mid: [500, 2000], highMid: [2000, 6000], high: [6000, 20000] };
+    let count = 0;
+
+    for (let offset = 0; offset + fftSize < data.length; offset += fftSize * 2) {
+      const seg = data.slice(offset, offset + fftSize);
+      const windowed = new Float32Array(fftSize);
+      for (let i = 0; i < fftSize; i++) {
+        windowed[i] = seg[i] * (0.5 - 0.5 * Math.cos(2 * Math.PI * i / fftSize));
+      }
+
+      for (const [band, [lo, hi]] of Object.entries(bandRanges)) {
+        const kLo = Math.floor(lo * fftSize / sr);
+        const kHi = Math.ceil(hi * fftSize / sr);
+        let power = 0;
+        for (let k = kLo; k <= Math.min(kHi, fftSize / 2 - 1); k++) {
+          let re = 0, im = 0;
+          // Approximate with sparse sampling for speed
+          const step = Math.max(1, Math.floor(fftSize / 256));
+          for (let i = 0; i < fftSize; i += step) {
+            const angle = 2 * Math.PI * k * i / fftSize;
+            re += windowed[i] * Math.cos(angle);
+            im -= windowed[i] * Math.sin(angle);
+          }
+          power += re * re + im * im;
+        }
+        bands[band] += power;
+      }
+      count++;
+    }
+
+    const total = Object.values(bands).reduce((a, b) => a + b, 0) || 1;
+    for (const band of Object.keys(bands)) {
+      bands[band] = bands[band] / total;
+    }
+
+    return bands;
+  }
+
+  analyzeEnergy(data) {
+    let rms = 0;
+    for (let i = 0; i < data.length; i++) rms += data[i] * data[i];
+    rms = Math.sqrt(rms / data.length);
+    return Math.min(1, rms * 5);
+  }
+
+  analyzeDynamics(data) {
+    const chunkSize = 4410;
+    const rmsValues = [];
+    for (let i = 0; i < data.length - chunkSize; i += chunkSize) {
+      let rms = 0;
+      for (let j = 0; j < chunkSize; j++) rms += data[i + j] * data[i + j];
+      rmsValues.push(Math.sqrt(rms / chunkSize));
+    }
+    const mean = rmsValues.reduce((a, b) => a + b, 0) / rmsValues.length;
+    const variance = rmsValues.reduce((a, b) => a + (b - mean) ** 2, 0) / rmsValues.length;
+    return Math.min(1, Math.sqrt(variance) * 10);
+  }
+
+  analyzeTexture(data, sr) {
+    // Zero-crossing rate as proxy for texture/noise
+    let zeroCrossings = 0;
+    for (let i = 1; i < data.length; i++) {
+      if ((data[i] >= 0) !== (data[i - 1] >= 0)) zeroCrossings++;
+    }
+    const zcr = zeroCrossings / data.length;
+    return Math.min(1, zcr * 15);
+  }
+
+  analyzeSpace(data, sr) {
+    // Autocorrelation decay as proxy for reverb/space
+    const segLen = Math.min(data.length, sr * 5);
+    const seg = data.slice(0, segLen);
+    let shortCorr = 0, longCorr = 0;
+    const shortLag = Math.floor(sr * 0.01);
+    const longLag = Math.floor(sr * 0.1);
+    const n = 10000;
+
+    for (let i = 0; i < n && i + longLag < segLen; i++) {
+      shortCorr += seg[i] * seg[i + shortLag];
+      longCorr += seg[i] * seg[i + longLag];
+    }
+
+    const ratio = (longCorr / (shortCorr || 1));
+    return Math.min(1, Math.max(0, ratio * 2 + 0.2));
+  }
+
+  analyzeRhythmComplexity(data, sr, bpm) {
+    if (bpm === 0) return 0.05;
+    const beatLen = Math.floor(sr * 60 / bpm);
+    const segLen = Math.min(data.length, sr * 10);
+    let onsets = [];
+
+    // Simple onset detection
+    const hopSize = 512;
+    let prevEnergy = 0;
+    for (let i = 0; i < segLen - hopSize; i += hopSize) {
+      let energy = 0;
+      for (let j = 0; j < hopSize; j++) energy += data[i + j] * data[i + j];
+      const diff = energy - prevEnergy;
+      if (diff > prevEnergy * 0.5 && diff > 0.001) {
+        onsets.push(i);
+      }
+      prevEnergy = energy;
+    }
+
+    if (onsets.length < 4) return 0.1;
+
+    // Check how evenly spaced onsets are
+    const intervals = [];
+    for (let i = 1; i < onsets.length; i++) {
+      intervals.push(onsets[i] - onsets[i - 1]);
+    }
+    const meanInt = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+    const intVariance = intervals.reduce((a, b) => a + (b - meanInt) ** 2, 0) / intervals.length;
+    const cv = Math.sqrt(intVariance) / (meanInt || 1);
+
+    return Math.min(1, cv * 1.5);
+  }
+
+  analyzeDarkness(spectrum) {
+    const lowWeight = (spectrum.sub + spectrum.bass) * 2;
+    const highWeight = (spectrum.highMid + spectrum.high);
+    return Math.min(1, Math.max(0, lowWeight / (lowWeight + highWeight + 0.001)));
+  }
+
+  analyzeExperimentalism(data, sr, bpm, spectrum) {
+    const texture = this.analyzeTexture(data, sr);
+    const rhythmIrr = bpm === 0 ? 0.8 : 0;
+    const spectralFlat = 1 - Math.max(...Object.values(spectrum)) * 5;
+    return Math.min(1, Math.max(0, (texture * 0.4 + Math.max(0, spectralFlat) * 0.3 + rhythmIrr * 0.3)));
+  }
+
+  deriveCharacteristics(bpm, key, energy, darkness, texture, space, rhythmComplexity, spectrum, experimentalism) {
+    const chars = [];
+
+    if (bpm > 155) chars.push({ label: 'High-Speed', color: 'magenta' });
+    else if (bpm > 125) chars.push({ label: 'Mid-Tempo', color: 'cyan' });
+    else if (bpm > 90) chars.push({ label: 'Downtempo', color: 'green' });
+    else if (bpm > 0) chars.push({ label: 'Slow-Burn', color: 'yellow' });
+    else chars.push({ label: 'Beatless', color: 'orange' });
+
+    if (energy > 0.7) chars.push({ label: 'High-Energy', color: 'magenta' });
+    else if (energy < 0.3) chars.push({ label: 'Ambient', color: 'green' });
+
+    if (darkness > 0.7) chars.push({ label: 'Dark', color: 'magenta' });
+    else if (darkness < 0.3) chars.push({ label: 'Bright', color: 'yellow' });
+
+    if (texture > 0.6) chars.push({ label: 'Textured/Noisy', color: 'orange' });
+    if (texture < 0.3) chars.push({ label: 'Clean', color: 'cyan' });
+
+    if (space > 0.7) chars.push({ label: 'Spacious/Reverberant', color: 'cyan' });
+    if (space < 0.3) chars.push({ label: 'Dry/Tight', color: 'yellow' });
+
+    if (rhythmComplexity > 0.7) chars.push({ label: 'Complex Rhythms', color: 'magenta' });
+    else if (rhythmComplexity < 0.2) chars.push({ label: 'Minimal Rhythm', color: 'green' });
+
+    if (spectrum.sub > 0.15) chars.push({ label: 'Sub-Heavy', color: 'magenta' });
+    if (spectrum.high > 0.2) chars.push({ label: 'Crispy Highs', color: 'cyan' });
+
+    if (experimentalism > 0.6) chars.push({ label: 'Experimental', color: 'orange' });
+    if (experimentalism < 0.3) chars.push({ label: 'Conventional', color: 'green' });
+
+    if (key.includes('m') || key === 'Atonal') chars.push({ label: 'Minor/Dark Tonality', color: 'magenta' });
+    else if (key !== 'N/A') chars.push({ label: 'Major Tonality', color: 'yellow' });
+
+    return chars;
+  }
+
+  getWaveformData(data, points) {
+    const blockSize = Math.floor(data.length / points);
+    const wave = [];
+    for (let i = 0; i < points; i++) {
+      let sum = 0;
+      for (let j = 0; j < blockSize; j++) {
+        sum += Math.abs(data[i * blockSize + j] || 0);
+      }
+      wave.push(sum / blockSize);
+    }
+    const max = Math.max(...wave) || 1;
+    return wave.map(v => v / max);
+  }
+
+  findSimilar(analysis, filters = {}) {
+    const { bpm, energy, darkness, texture, space, rhythmComplexity, experimentalism } = analysis;
+
+    const weights = {
+      bpm: filters.bpmWeight ?? 0.15,
+      energy: filters.energyWeight ?? 0.2,
+      darkness: filters.darknessWeight ?? 0.2,
+      texture: filters.textureWeight ?? 0.15,
+      space: filters.spaceWeight ?? 0.1,
+      rhythmComplexity: filters.rhythmWeight ?? 0.1,
+      experimentalism: filters.expWeight ?? 0.1,
+    };
+
+    return SONIC_DB.trackDB.map(track => {
+      const bpmSim = bpm > 0 && track.bpm > 0 ? 1 - Math.min(Math.abs(bpm - track.bpm) / 60, 1) : (bpm === 0 && track.bpm === 0 ? 1 : 0.2);
+      const energySim = 1 - Math.abs(energy - track.energy);
+      const darkSim = 1 - Math.abs(darkness - track.darkness);
+      const texSim = 1 - Math.abs(texture - track.texture);
+      const spaceSim = 1 - Math.abs(space - track.space);
+      const rhythmSim = 1 - Math.abs(rhythmComplexity - track.rhythmComplexity);
+      const expSim = 1 - Math.abs(experimentalism - track.experimentalism);
+
+      const totalWeight = Object.values(weights).reduce((a, b) => a + b, 0) || 1;
+      const score = (
+        bpmSim * weights.bpm +
+        energySim * weights.energy +
+        darkSim * weights.darkness +
+        texSim * weights.texture +
+        spaceSim * weights.space +
+        rhythmSim * weights.rhythmComplexity +
+        expSim * weights.experimentalism
+      ) / totalWeight;
+
+      const reasons = [];
+      if (bpmSim > 0.8) reasons.push(`BPM: ${track.bpm} (close to ${bpm})`);
+      if (energySim > 0.8) reasons.push(`Similar energy level`);
+      if (darkSim > 0.85) reasons.push(`Matching darkness`);
+      if (texSim > 0.8) reasons.push(`Similar texture`);
+      if (spaceSim > 0.8) reasons.push(`Similar spatial quality`);
+      if (rhythmSim > 0.8) reasons.push(`Rhythm complexity match`);
+      if (expSim > 0.8) reasons.push(`Experimentalism match`);
+
+      return { ...track, score, reasons };
+    })
+    .filter(t => {
+      if (filters.genre && t.genre !== filters.genre) return false;
+      if (filters.minBpm && t.bpm < filters.minBpm) return false;
+      if (filters.maxBpm && t.bpm > filters.maxBpm) return false;
+      return true;
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, filters.maxResults || 10);
+  }
+
+  play() {
+    if (!this.audioCtx || !this.audioBuffer) return;
+    if (this.isPlaying) { this.stop(); return; }
+    this.sourceNode = this.audioCtx.createBufferSource();
+    this.sourceNode.buffer = this.audioBuffer;
+    this.sourceNode.connect(this.audioCtx.destination);
+    this.sourceNode.start();
+    this.isPlaying = true;
+    this.sourceNode.onended = () => { this.isPlaying = false; };
+  }
+
+  stop() {
+    if (this.sourceNode && this.isPlaying) {
+      this.sourceNode.stop();
+      this.isPlaying = false;
+    }
+  }
+}
+
+// =================== APP ===================
+const analyzer = new SonicAnalyzer();
+let currentFile = null;
+let currentAnalysis = null;
+let filterState = {
+  genre: '',
+  bpmWeight: 0.15,
+  energyWeight: 0.2,
+  darknessWeight: 0.2,
+  textureWeight: 0.15,
+  spaceWeight: 0.1,
+  rhythmWeight: 0.1,
+  expWeight: 0.1,
+  maxResults: 10,
+  minBpm: 0,
+  maxBpm: 300,
+};
+let activeChars = new Set();
+
+function render(state) {
+  const app = document.getElementById('app');
+
+  if (state === 'upload') {
+    app.innerHTML = `
+      <div class="header fade-in">
+        <h1>SONIC LAB</h1>
+        <div class="subtitle">frequency dissector // similarity engine</div>
+        <div class="version">v2.1.0 // WEB AUDIO API</div>
+      </div>
+      <div class="upload-zone fade-in stagger-1" id="dropZone" onclick="document.getElementById('fileInput').click()">
+        <div class="upload-icon">◈</div>
+        <h3>INJECT AUDIO SPECIMEN</h3>
+        <p>drop .mp3, .wav, .ogg, .flac, .aac or click to browse</p>
+        <p style="margin-top:8px;color:#444">max recommended: 15 min // all analysis runs locally in-browser</p>
+        <input type="file" id="fileInput" accept="audio/*">
+      </div>
+    `;
+    setupUpload();
+  }
+
+  else if (state === 'analyzing') {
+    app.innerHTML = `
+      <div class="header">
+        <h1>SONIC LAB</h1>
+        <div class="subtitle">frequency dissector // similarity engine</div>
+      </div>
+      <div class="analyzer-status">
+        <div class="spinner"></div>
+        <p>▸ DECODING AUDIO BUFFER...</p>
+        <p style="margin-top:8px;color:#333;font-size:0.7rem" id="analysisStep">initializing web audio context</p>
+      </div>
+    `;
+  }
+
+  else if (state === 'results') {
+    renderResults();
+  }
+}
+
+function setupUpload() {
+  const zone = document.getElementById('dropZone');
+  const input = document.getElementById('fileInput');
+
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragging'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragging'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('dragging');
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  input.addEventListener('change', e => { if (e.target.files.length) handleFile(e.target.files[0]); });
+}
+
+async function handleFile(file) {
+  currentFile = file;
+  render('analyzing');
+
+  const step = document.getElementById('analysisStep');
+
+  try {
+    step.textContent = 'decoding audio buffer...';
+    await analyzer.loadFile(file);
+
+    step.textContent = 'analyzing frequency spectrum...';
+    await new Promise(r => setTimeout(r, 200));
+
+    step.textContent = 'detecting tempo & key...';
+    await new Promise(r => setTimeout(r, 200));
+
+    step.textContent = 'computing sonic fingerprint...';
+    currentAnalysis = analyzer.analyze();
+
+    await new Promise(r => setTimeout(r, 300));
+    render('results');
+  } catch (err) {
+    alert('Error analyzing file: ' + err.message);
+    render('upload');
+  }
+}
+
+function renderResults() {
+  const a = currentAnalysis;
+  const app = document.getElementById('app');
+  const similar = analyzer.findSimilar(a, filterState);
+
+  const spectrumBands = [
+    { key: 'sub', label: 'SUB', color: '#ff3355' },
+    { key: 'bass', label: 'BASS', color: '#ff8800' },
+    { key: 'lowMid', label: 'LO-MID', color: '#f0ff00' },
+    { key: 'mid', label: 'MID', color: '#00ff88' },
+    { key: 'highMid', label: 'HI-MID', color: '#00f0ff' },
+    { key: 'high', label: 'HIGH', color: '#ff00e5' },
+  ];
+
+  const maxSpec = Math.max(...Object.values(a.spectrum));
+
+  const genreOptions = Object.entries(SONIC_DB.genres).map(([k, v]) =>
+    `<option value="${k}" ${filterState.genre === k ? 'selected' : ''}>${v.label}</option>`
+  ).join('');
+
+  app.innerHTML = `
+    <div class="header fade-in">
+      <h1>SONIC LAB</h1>
+      <div class="subtitle">analysis complete // ${currentFile.name}</div>
+      <div style="margin-top:12px">
+        <button class="new-file-btn" onclick="analyzer.stop();render('upload')">◁ NEW SPECIMEN</button>
+      </div>
+    </div>
+
+    <!-- PLAYER -->
+    <div class="player-bar fade-in stagger-1">
+      <button class="play-btn" onclick="togglePlay(this)">▶</button>
+      <div class="track-info">
+        <div class="track-name">${currentFile.name}</div>
+        <div class="track-meta">${formatDuration(a.duration)} // ${a.sampleRate}Hz // ${a.channels}ch</div>
+      </div>
+      <div class="waveform-mini">
+        <canvas id="waveformCanvas"></canvas>
+      </div>
+    </div>
+
+    <!-- CORE METRICS -->
+    <div class="section-title fade-in stagger-2">
+      <span>◈ CORE METRICS</span>
+      <span class="tag">ANALYSIS</span>
+    </div>
+    <div class="analysis-grid fade-in stagger-2">
+      <div class="card">
+        <div class="card-label">DETECTED TEMPO</div>
+        <div class="card-value">${a.bpm} <span style="font-size:0.8rem;opacity:0.5">BPM</span></div>
+        <div class="card-detail">${a.bpm > 155 ? 'High-speed territory — breakcore, jungle, gabber range' : a.bpm > 125 ? 'Standard dance tempo — techno, house, trance zone' : a.bpm > 90 ? 'Downtempo — trip-hop, lo-fi, chill zone' : a.bpm > 0 ? 'Slow groove — ambient, dub, slow burn' : 'No consistent beat detected — ambient/drone territory'}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">DETECTED KEY</div>
+        <div class="card-value magenta">${a.key}</div>
+        <div class="card-detail">${a.key.includes('m') ? 'Minor key — conveys tension, melancholy, or darkness' : a.key === 'Atonal' ? 'No clear tonal center — experimental / noise' : a.key === 'N/A' ? 'Indeterminate — heavily textured or percussive' : 'Major key — brighter, more uplifting tonal character'}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">ENERGY LEVEL</div>
+        <div class="card-value ${a.energy > 0.7 ? '' : a.energy > 0.4 ? 'yellow' : 'green'}">${(a.energy * 100).toFixed(0)}%</div>
+        <div class="card-detail">${a.energy > 0.7 ? 'Intense — loud, driving, physically impactful' : a.energy > 0.4 ? 'Moderate — balanced dynamics, groove-oriented' : 'Subdued — meditative, atmospheric, introspective'}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">DYNAMIC RANGE</div>
+        <div class="card-value orange">${(a.dynamics * 100).toFixed(0)}%</div>
+        <div class="card-detail">${a.dynamics > 0.6 ? 'Wide dynamics — lots of contrast between loud and quiet' : a.dynamics > 0.3 ? 'Moderate dynamics — some variation, typical of electronic music' : 'Compressed — consistent level, wall-of-sound approach'}</div>
+      </div>
+    </div>
+
+    <!-- SONIC FINGERPRINT -->
+    <div class="section-title fade-in stagger-3">
+      <span>◈ SONIC FINGERPRINT</span>
+      <span class="tag">DNA</span>
+    </div>
+    <div class="analysis-grid fade-in stagger-3">
+      <div class="card">
+        <div class="card-label">FREQUENCY SPECTRUM</div>
+        <div class="spectrum-bar">
+          ${spectrumBands.map(b => `<div style="background:${b.color};opacity:${0.3 + (a.spectrum[b.key] / maxSpec) * 0.7};height:${4 + (a.spectrum[b.key] / maxSpec) * 20}px;align-self:flex-end;border-radius:2px" title="${b.label}: ${(a.spectrum[b.key] * 100).toFixed(1)}%"></div>`).join('')}
+        </div>
+        <div class="spectrum-labels">
+          ${spectrumBands.map(b => `<span>${b.label}</span>`).join('')}
+        </div>
+        <div class="card-detail" style="margin-top:12px">
+          ${a.spectrum.sub > 0.12 ? 'Heavy sub-bass presence — felt more than heard. ' : ''}
+          ${a.spectrum.bass > 0.25 ? 'Strong bass foundation driving the low end. ' : ''}
+          ${a.spectrum.mid > 0.3 ? 'Prominent mids — melodic content centered here. ' : ''}
+          ${a.spectrum.high > 0.15 ? 'Active high frequencies — crisp, airy, or noisy character.' : ''}
+          ${a.spectrum.sub + a.spectrum.bass > 0.35 ? 'Bottom-heavy mix — designed for systems with subwoofers.' : ''}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">SONIC DIMENSIONS</div>
+        ${renderMeter('DARKNESS', a.darkness, '#ff3355')}
+        ${renderMeter('TEXTURE', a.texture, '#ff8800')}
+        ${renderMeter('SPACE', a.space, '#00f0ff')}
+        ${renderMeter('RHYTHM CX', a.rhythmComplexity, '#f0ff00')}
+        ${renderMeter('EXPERIMENT', a.experimentalism, '#ff00e5')}
+        <div class="card-detail" style="margin-top:12px">
+          This track has a ${a.darkness > 0.6 ? 'dark' : a.darkness > 0.4 ? 'neutral' : 'bright'}, 
+          ${a.texture > 0.6 ? 'heavily textured' : a.texture > 0.3 ? 'moderately textured' : 'clean'} sound with 
+          ${a.space > 0.6 ? 'lots of reverb/space' : a.space > 0.3 ? 'moderate spatial depth' : 'a dry, upfront mix'}.
+        </div>
+      </div>
+      <div class="card full-card">
+        <div class="card-label">SONIC DNA STRAND</div>
+        <div class="dna-strand" id="dnaStrand"></div>
+        <div class="card-label" style="margin-top:8px;text-align:center">DETECTED CHARACTERISTICS</div>
+        <div class="char-tags">
+          ${a.characteristics.map(c => `<span class="char-tag ${c.color} ${activeChars.has(c.label) ? 'active' : ''}" onclick="toggleChar('${c.label}')">${c.label}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- SIMILARITY ENGINE -->
+    <div class="section-title fade-in stagger-4">
+      <span>◈ SIMILARITY ENGINE</span>
+      <span class="tag">MATCHES</span>
+    </div>
+
+    <div class="filter-panel fade-in stagger-4">
+      <div class="card-label" style="margin-bottom:12px">TUNE MATCHING PARAMETERS</div>
+      <div class="filter-row">
+        <div class="filter-group">
+          <label>GENRE FILTER</label>
+          <select onchange="filterState.genre=this.value;renderResults()">
+            <option value="">ALL GENRES</option>
+            ${genreOptions}
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>BPM WEIGHT: ${(filterState.bpmWeight * 100).toFixed(0)}%</label>
+          <input type="range" min="0" max="100" value="${filterState.bpmWeight * 100}" oninput="filterState.bpmWeight=this.value/100;renderResults()">
+        </div>
+        <div class="filter-group">
+          <label>ENERGY WEIGHT: ${(filterState.energyWeight * 100).toFixed(0)}%</label>
+          <input type="range" min="0" max="100" value="${filterState.energyWeight * 100}" oninput="filterState.energyWeight=this.value/100;renderResults()">
+        </div>
+        <div class="filter-group">
+          <label>DARKNESS WEIGHT: ${(filterState.darknessWeight * 100).toFixed(0)}%</label>
+          <input type="range" min="0" max="100" value="${filterState.darknessWeight * 100}" oninput="filterState.darknessWeight=this.value/100;renderResults()">
+        </div>
+        <div class="filter-group">
+          <label>TEXTURE WEIGHT: ${(filterState.textureWeight * 100).toFixed(0)}%</label>
+          <input type="range" min="0" max="100" value="${filterState.textureWeight * 100}" oninput="filterState.textureWeight=this.value/100;renderResults()">
+        </div>
+        <div class="filter-group">
+          <label>SPACE WEIGHT: ${(filterState.spaceWeight * 100).toFixed(0)}%</label>
+          <input type="range" min="0" max="100" value="${filterState.spaceWeight * 100}" oninput="filterState.spaceWeight=this.value/100;renderResults()">
+        </div>
+        <div class="filter-group">
+          <label>RHYTHM WEIGHT: ${(filterState.rhythmWeight * 100).toFixed(0)}%</label>
+          <input type="range" min="0" max="100" value="${filterState.rhythmWeight * 100}" oninput="filterState.rhythmWeight=this.value/100;renderResults()">
+        </div>
+        <div class="filter-group">
+          <label>EXPERIMENT WEIGHT: ${(filterState.expWeight * 100).toFixed(0)}%</label>
+          <input type="range" min="0" max="100" value="${filterState.expWeight * 100}" oninput="filterState.expWeight=this.value/100;renderResults()">
+        </div>
+      </div>
+    </div>
+
+    <div id="suggestionsContainer" class="fade-in stagger-5">
+      ${similar.map((track, i) => renderSuggestion(track, a, i)).join('')}
+    </div>
+
+    <div style="text-align:center;padding:40px;font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:#333;letter-spacing:0.2em">
+      SONIC LAB v2.1.0 // ALL ANALYSIS RUNS LOCALLY IN YOUR BROWSER // NO DATA UPLOADED
+    </div>
+  `;
+
+  // Draw waveform
+  setTimeout(() => {
+    drawWaveform();
+    drawDNA();
+  }, 100);
+}
+
+function renderMeter(label, value, color) {
+  return `
+    <div class="meter-row">
+      <span class="meter-label">${label}</span>
+      <div class="meter-bar">
+        <div class="meter-fill" style="width:${value * 100}%;background:${color}"></div>
+      </div>
+      <span class="meter-val" style="color:${color}">${(value * 100).toFixed(0)}</span>
+    </div>
+  `;
+}
+
+function renderSuggestion(track, analysis, index) {
+  const pct = (track.score * 100).toFixed(0);
+  const matchClass = pct >= 75 ? 'high' : pct >= 55 ? 'mid' : 'low';
+  const genreInfo = SONIC_DB.genres[track.genre] || { label: track.genre, color: '#888' };
+
+  // Build detailed explanation
+  const explanations = [];
+  const bpmDiff = Math.abs(analysis.bpm - track.bpm);
+  if (analysis.bpm > 0 && track.bpm > 0) {
+    if (bpmDiff <= 5) explanations.push(`<strong>Near-identical tempo</strong> at ${track.bpm} BPM (yours: ${analysis.bpm}) — these would mix seamlessly.`);
+    else if (bpmDiff <= 15) explanations.push(`<strong>Compatible tempo</strong> at ${track.bpm} BPM (Δ${bpmDiff} from yours) — easy pitch-blend territory.`);
+  } else if (analysis.bpm === 0 && track.bpm === 0) {
+    explanations.push(`<strong>Both beatless</strong> — shared ambient/drone territory where rhythm takes a back seat to texture.`);
+  }
+
+  const energyDiff = Math.abs(analysis.energy - track.energy);
+  if (energyDiff < 0.15) explanations.push(`<strong>Matched energy profile</strong> — both sit at a similar intensity level, creating cohesive listening flow.`);
+
+  const darkDiff = Math.abs(analysis.darkness - track.darkness);
+  if (darkDiff < 0.15) explanations.push(`<strong>Spectral darkness alignment</strong> — similar low-frequency dominance means they share that same "weight" in the mix.`);
+
+  const texDiff = Math.abs(analysis.texture - track.texture);
+  if (texDiff < 0.15) explanations.push(`<strong>Textural kinship</strong> — both share a similar ${track.texture > 0.6 ? 'noisy, granular' : track.texture > 0.3 ? 'moderately textured' : 'clean, polished'} surface quality.`);
+
+  const spaceDiff = Math.abs(analysis.space - track.space);
+  if (spaceDiff < 0.15) explanations.push(`<strong>Spatial similarity</strong> — both occupy a ${track.space > 0.6 ? 'wide, reverberant' : track.space > 0.3 ? 'moderately open' : 'tight, intimate'} sonic space.`);
+
+  if (explanations.length === 0) {
+    explanations.push(`This track shares overlapping qualities across multiple dimensions — while no single parameter is a perfect match, the <strong>aggregate sonic profile</strong> aligns with your specimen's character.`);
+  }
+
+  return `
+    <div class="suggestion-card match-${matchClass}" style="animation-delay:${index * 0.08}s">
+      <div class="suggestion-header">
+        <div>
+          <div class="suggestion-title">${track.title}</div>
+          <div class="suggestion-artist">${track.artist} · <span style="color:${genreInfo.color}">${genreInfo.label}</span> · ${track.bpm > 0 ? track.bpm + ' BPM' : 'Beatless'} · ${track.key}</div>
+        </div>
+        <div>
+          <div class="match-pct ${matchClass}">${pct}%</div>
+          <div class="match-label">MATCH</div>
+        </div>
+      </div>
+      <div class="match-reasons">
+        ${track.reasons.map(r => `<span class="match-reason">${r}</span>`).join('')}
+        ${track.tags.map(t => `<span class="match-reason" style="background:rgba(255,0,229,0.06);color:#ff88cc;border-color:rgba(255,0,229,0.15)">${t}</span>`).join('')}
+      </div>
+      <div class="suggestion-explanation">
+        ${explanations.join(' ')}
+      </div>
+    </div>
+  `;
+}
+
+function drawWaveform() {
+  const canvas = document.getElementById('waveformCanvas');
+  if (!canvas || !currentAnalysis) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+
+  const wave = currentAnalysis.waveformData;
+  const w = rect.width;
+  const h = rect.height;
+  const barW = w / wave.length;
+
+  const grad = ctx.createLinearGradient(0, 0, w, 0);
+  grad.addColorStop(0, '#00f0ff');
+  grad.addColorStop(0.5, '#ff00e5');
+  grad.addColorStop(1, '#00f0ff');
+
+  ctx.fillStyle = grad;
+  for (let i = 0; i < wave.length; i++) {
+    const barH = wave[i] * h * 0.9;
+    ctx.fillRect(i * barW, (h - barH) / 2, Math.max(1, barW - 0.5), barH);
+  }
+}
+
+function drawDNA() {
+  const container = document.getElementById('dnaStrand');
+  if (!container || !currentAnalysis) return;
+
+  const a = currentAnalysis;
+  const values = [a.energy, a.darkness, a.texture, a.space, a.rhythmComplexity, a.experimentalism, a.dynamics];
+  const colors = ['#ff3355', '#ff8800', '#f0ff00', '#00ff88', '#00f0ff', '#ff00e5', '#8844cc'];
+
+  const totalNodes = 60;
+  let html = '';
+  for (let i = 0; i < totalNodes; i++) {
+    const t = i / totalNodes;
+    const vIdx = Math.floor(t * values.length);
+    const val = values[Math.min(vIdx, values.length - 1)];
+    const color = colors[Math.min(vIdx, colors.length - 1)];
+    const size = 4 + val * 10;
+    const yOffset = Math.sin(t * Math.PI * 4) * 12 * val;
+    html += `<div class="dna-node" style="width:${size}px;height:${size}px;background:${color};opacity:${0.3 + val * 0.7};transform:translateY(${yOffset}px);color:${color}"></div>`;
+  }
+  container.innerHTML = html;
+}
+
+function togglePlay(btn) {
+  analyzer.play();
+  btn.textContent = analyzer.isPlaying ? '⏸' : '▶';
+}
+
+function toggleChar(label) {
+  if (activeChars.has(label)) activeChars.delete(label);
+  else activeChars.add(label);
+  renderResults();
+}
+
+function formatDuration(secs) {
+  const m = Math.floor(secs / 60);
+  const s = Math.floor(secs % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+// Init
+render('upload');
+</script>
+</body>
+</html>
